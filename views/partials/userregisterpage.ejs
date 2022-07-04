@@ -1,0 +1,64 @@
+    <div class="wrapper">
+        <h5>Work with us now</h5>
+        <p class="login">Please fill in the deatils to continue</p>
+        <form action="#" method="post">
+            <div class="user-details">
+            <div class="input-box">
+                <label>First name</label>
+                <input type="text" name="fname" required>
+            </div>
+            <div class="input-box">
+                <label>Last name</label>
+                <input type="text" name="fname" required>
+            </div>
+            <div class="input-box">
+                <label>Email address</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="input-box">
+                <label>Phone number</label>
+                <input type="number" name="number" required>
+            </div>
+            <div class="input-box">
+                <label>Address</label>
+                <input type="text" name="text" required>
+            </div>
+            <div class="input-box">
+                <label>City/State</label>
+                <input type="text" name="text" required>
+            </div>
+            <div class="input-box">
+                <label>Post code/Zip code</label>
+                <input type="text" name="text" required>
+            </div>
+            <div class="input-box">
+                <label>Password</label>
+                <input type="text" name="text" required>
+            </div>
+            <div class="input-box">
+                <label>Confirm password</label>
+                <input type="text" name="text" required>
+            </div>
+            </div>
+            <button type="submit" class="btn">Submit</a></button>
+        </form>    
+    </div>
+    <script>
+        "use strict";
+        var x = document.getElementById("login-form-password");   // Input
+        var h = document.getElementById("Layer_2");               // Hide pass
+        var s = document.getElementById("Layer_1");            // Show pass
+        function togglePass() {
+            if (x.type === "password") {
+                x.type = 'text';
+                s.style.display = 'none';
+                h.style.display = 'inline';
+            } else {
+                x.type = 'password';
+                s.style.display = 'inline';
+                h.style.display = 'none';
+            }   
+        }
+    </script>
+</section>
+

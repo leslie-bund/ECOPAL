@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
+  <%- include('partials/head.ejs') %> 
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <%- include('partials/nav.ejs') %> 
+    <main>
+      <%- include('home.ejs') %> 
+      <%- include('login.ejs') %>
+      <%- include('signup.ejs') %>
+    </main>
+
+    <script>
+      const pageElements = document.querySelectorAll('main > div');
+      pageElements.forEach(node => {
+        console.log(node.id)
+        if (node.id !== 'home') {
+          node.style.display = 'none'
+        }
+      });
+
+      const switcher = document.querySelectorAll('.switch')
+        switcher.forEach(node => {
+            node.addEventListener('click', (e) => {
+              document.querySelectorAll('main > div').forEach(node => {
+                  if(node.id === e.target.dataset.toggle) {
+                    node.style.display = 'block'
+                  } else {
+                    node.style.display = 'none'
+                  }
+                }
+              );
+            })
+        })
+
+    </script>
   </body>
 </html>
