@@ -1,51 +1,51 @@
 <div id="driverRegForm" class="registration-form">
     <h5>Driver Registration Form</h5>
-    <form action="#" method="post">
+    <form action="/drivers/register" method="post">
         <div class="user-details">
             <div class="flex">
                 <div class="input-box">
                     <label>First name</label>
-                    <input type="text" name="fname" required>
+                    <input type="text" name="firstname" required>
                 </div>
                 <div class="input-box">
                     <label>Last name</label>
-                    <input type="text" name="fname" required>
+                    <input type="text" name="lastname" required>
                 </div>
             </div>
             <div class="input-box">
                 <label>Email address</label>
-                <input type="email" name="email" required>
+                <input type="email" name="emailAddress" required>
             </div>
             <div class="input-box">
                 <label>Phone number</label>
-                <input type="tel" name="number" required>
+                <input type="tel" name="phone" required>
             </div>
             <div class="flex">
                 <div class="input-box">
                     <label>Address</label>
-                    <input type="text" name="text" required>
+                    <input type="text" name="address" required>
                 </div>
-                <div class="input-box">
+                <div class="input-box" style="margin: 0px 5px;">
                     <label>State</label>
-                    <input type="text" name="text" required>
+                    <input disabled value="Lagos" type="text" name="text" required>
                 </div>
                 <div class="input-box">
                     <label>Zip code</label>
-                    <input type="text" name="text" required>
+                    <input type="text" name="zipcode" required>
                 </div>
             </div>
             <div class="input-box">
                 <label>License No.</label>
-                <input type="text" name="text" required>
+                <input type="text" name="LicenseNumber" required>
             </div>
             <div class="flex">
                 <div class="input-box">
                     <label>Password</label>
-                    <input type="text" name="text" required>
+                    <input type="text" name="password" required>
                 </div>
                 <div class="input-box">
                     <label>Confirm password</label>
-                    <input type="text" name="text" required>
+                    <input type="text" name="confirmPassword" required>
                 </div>
             </div>
         </div>
