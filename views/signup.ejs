@@ -1,0 +1,49 @@
+<div id="signup">
+    <div class="switcher sign-switch">
+        <button data-toggle="userRegForm">
+            User
+        </button>
+        <button data-toggle="driverRegForm">
+            Driver
+        </button>
+        <button data-toggle="adminRegForm">
+            Admin
+        </button>
+    </div>
+    <div class="switcher-display sign-disp">
+        <%- include('partials/createaccount.ejs') %> 
+        <%- include('partials/driverregform.ejs') %> 
+        <%- include('partials/adminregform.ejs') %> 
+    </div>
+</div>
+<script>
+    requestAnimationFrame(() => {
+        const signupForms = document.querySelectorAll('.sign-disp > div');
+        const signupTogglers = document.querySelectorAll('.sign-switch > button');
+
+        signupForms.forEach((node, index) => {
+            if(index === 0) {
+                signupTogglers[index].classList.toggle('active')
+                node.style.display = 'block';
+            } else {
+                node.style.display = 'none';}
+        })
+
+        signupTogglers.forEach(node => {
+            node.addEventListener('click', (e) => {
+                signupForms.forEach((node, index) => {
+                    if(node.id === e.target.dataset.toggle) {
+                        node.style.display = 'block';
+                        if (!signupTogglers[index].classList.contains('active')) {
+                            signupTogglers[index].classList.toggle('active')
+                        }
+                    } else {
+                        signupTogglers[index].classList.remove('active')
+                        node.style.display = 'none';
+                    }
+                })
+            })
+        })
+    })()
+
+</script>

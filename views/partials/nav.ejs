@@ -1,0 +1,30 @@
+<section>
+    <div class="menu">
+        <header>
+            <div class="burger">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </div>
+            <h3 class="logo">
+                ECOPAL
+            </h3>
+        </header>
+        <nav>
+            <ul class="nav-items">
+                <li><button class="switch" data-toggle="home">Home</button></li>
+                <li><button class="switch" data-toggle="service">Services</button></li>
+                <li><button class="switch" data-toggle="login">Login</button></li>
+                <li><button class="switch" data-toggle="signup">Sign up</button></li>
+            </ul>
+        </nav>
+    </div>
+    <script>
+        const burger = document.querySelector('.burger')
+        const nav = document.querySelector('nav')
+        burger.addEventListener('click', () => {
+            nav.classList.toggle('open')
+            burger.classList.toggle('open')
+        })
+    </script>
+</section>
