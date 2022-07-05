@@ -1,14 +1,14 @@
 <div id="adminlogin" class="registration-form">
     <h5>Login Admin</h5>
-    <form action="#" method="post">
+    <form action="/admin/login" method="post">
         <label for="">Email/Number</label>
-        <input type="email" name="email" required>
+        <input type="email" name="emailAddress" required>
         <label for="">Password</label>
         <div id='inputcontainer'>
-            <input type="password" id="login-form-password" name="os_password" required></input>
+            <input type="password" id="login-form-password" name="password" required></input>
         </div>
         <button type="submit" class="btn">Login</button>
-        <p class="login">Don't have an account? <a class="link" href="#">Sign up</a></p>
+        <p class="login">Don't have an account? <a class="link" href="/admin/register">Sign up</a></p>
     </form>
 </div>
 
