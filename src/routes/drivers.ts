@@ -1,5 +1,5 @@
 import express, { Router, Response, Request } from 'express';
-import { createDriver } from '../controllers/users';
+import { createDriver } from '../controllers/drivers';
 const router = Router();
 
 router.get('/',(req: Request, res: Response) => {
@@ -24,5 +24,8 @@ router.put('/updateOrder', function(req, res, next) {
 
 
 router.post('/register', createDriver);
+router.get('/register', function(req, res, next){
+    res.render('driverregform');
+})
 
 export default router;
