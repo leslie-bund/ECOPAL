@@ -1,6 +1,7 @@
 import express, { Response, Request } from 'express';
 import { addUser } from '../models/users';
-import { UserReg, validateUserRegInput } from '../utils/utils';
+import { validateUserRegInput, emailHasMxRecord, getUserAuthToken } from '../utils/utils';
+var debug = require('debug')('ecopal:server');
 
 
 export async function createUser(req: Request, res: Response) {
@@ -19,24 +20,34 @@ export async function createUser(req: Request, res: Response) {
     //validate input;
     const { value, error } = await validateUserRegInput (user);
     if(error){
-        const err: string = error.details[0].message;
-        console.log(err);
-        return res.render('error', { error: err });
+        return res.status(400).render('index', { page: 'signup', message: error.details[0].message });
     }
 
     // Perform User email DNS mxRecord lookup
+    const validMail = await emailHasMxRecord(value.emailAddress);
 
+    if (!validMail) {
+        const message = `Please provide a working email address`;
+        return res.status(400).render('index', { page: 'signup', message: message });
+    }
+    let message;
+    try {   
+        const userData = await addUser(user);
+        message = `Successfully registered ${userData.firstname} ${userData.lastname} and ${userData._id}`;
 
-    const userData = await addUser(user);
-    const message = 'Successfully registered';
-    return res.status(200).render('index', {value: userData, message: message });    
-    // return res.status(200).redirect('/users/getorders'); ---work with this when available!
+        // Set user's cookies here before redirecting
+        const token = getUserAuthToken(userData);
+
+        // Redirect the user to the User dashboard route
+        res.cookie('authorization', `${token}`);
+
+        // return res.status(200).redirect('/users/getorders'); ---work with this when available!
+    } catch (error) {
+        message = `Email has been claimed please choose another email`;
+        return res.status(200).render('index', { page: 'signup' , message: message });    
+        
+    }
+
 }
 
-// export async function getAllUsers(req: Request, res: Response) {
-//     const allUsers = await readAllUsers();
-//     if(!allUsers){
-//         return res.status(400).render('index', {})
-//     }
-// }
 

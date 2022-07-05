@@ -4,34 +4,31 @@
   <body>
     <%- include('partials/nav.ejs') %> 
     <main>
+      <span class="alert" id="alert">
+        <span class="alert-close" data-toggle="alert">X</span>
+        <p class="alert-text">
+          <% if (typeof message !== 'undefined') { %>
+            <b style="color: teal;"><%= message %></b>
+          <% } %>
+        </p>
+      </span>
       <%- include('home.ejs') %> 
       <%- include('login.ejs') %>
       <%- include('signup.ejs') %>
     </main>
 
     <script>
-      const pageElements = document.querySelectorAll('main > div');
-      pageElements.forEach(node => {
-        console.log(node.id)
-        if (node.id !== 'home') {
-          node.style.display = 'none'
-        }
-      });
-
-      const switcher = document.querySelectorAll('.switch')
-        switcher.forEach(node => {
-            node.addEventListener('click', (e) => {
-              document.querySelectorAll('main > div').forEach(node => {
-                  if(node.id === e.target.dataset.toggle) {
-                    node.style.display = 'block'
-                  } else {
-                    node.style.display = 'none'
-                  }
-                }
-              );
-            })
-        })
+        const pageElements = document.querySelectorAll('main > div');
+        const main = document.querySelector('main');
+        // console.log('List of page elements')
+        pageElements.forEach((node, index) => {
+          // console.log(`Element ${index}`,node.id)
+          if (node.id !== '<%= page %>') {
+            node.style.display = 'none'
+          }
+        });
 
     </script>
+    <script src="/javascripts/render.js"></script>
   </body>
 </html>

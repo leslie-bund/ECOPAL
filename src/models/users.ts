@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { UserReg, hashPassword } from "../utils/utils";
+import { hashPassword } from "../utils/utils";
+var debug = require('debug')('ecopal:server');
 
 
 const userRegSchema = new mongoose.Schema({
@@ -10,45 +11,20 @@ const userRegSchema = new mongoose.Schema({
     address: String,
     zipcode: String,
     password: String,
+    role: { type: String, default: 'user' }
 
 })
 
 
-
-
-
 //Post user, driver and admin
+export const UserData = mongoose.model('UserData', userRegSchema);
 export async function addUser(user:UserReg) {
-   const UserData = mongoose.model('UserData', userRegSchema);
    const userData = new UserData(user);
    userData.password = await hashPassword(user.password);
    const value = await userData.save();
    return value;
 }
 
-
-
-
-//Get all users, drivers and admins.
-export async function readAllUsers (){
-    const UserData = mongoose.model('UserData', userRegSchema);
-    // const userData = new UserData();
-    try{
-        const allUsers = UserData.find();
-        if(!allUsers){
-            throw new Error('Something went wrong'); 
-        }
-        const  allUsersObj= {value: allUsers, error: null};
-        console.log(allUsersObj);
-        return allUsersObj;
-
-    }catch(err){
-
-
-    }
-   
-
-}
 
 
 

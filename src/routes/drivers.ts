@@ -1,14 +1,13 @@
 import express, { Router, Response, Request } from 'express';
+import { verifyDriver } from '../utils/utils';
 import { createDriver } from '../controllers/drivers';
 const router = Router();
 
-router.get('/',(req: Request, res: Response) => {
-    res.send('driver\'s route');
-})
-
 router.post('/register', createDriver);
-router.get('/register', function(req, res, next){
-    res.render('driverregform');
-})
+
+
+router.use(verifyDriver);
+
+// Add driver routes after login
 
 export default router;
