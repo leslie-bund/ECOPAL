@@ -77,3 +77,8 @@ interface userPayload{
     password: string;
     role: string;
 }
+
+interface Login {
+    emailAddress: string
+    password: string
+  }

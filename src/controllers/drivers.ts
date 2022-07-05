@@ -1,6 +1,7 @@
 import express, { Response, Request } from 'express';
-import { addDriver } from '../models/drivers';
-import { validateDriverRegInput, emailHasMxRecord, getUserAuthToken } from '../utils/utils';
+import { addDriver, logInDriver } from '../models/drivers';
+import bcrypt from 'bcrypt';
+import { validateDriverRegInput, emailHasMxRecord, getUserAuthToken, validateLoginInput } from '../utils/utils';
 var debug = require('debug')('ecopal:server');
 
 
@@ -33,23 +34,42 @@ export async function createDriver(req: Request, res: Response) {
     }
 
     let message;
-    try {   
-        const driverData = await addDriver(user);
-        message = `Successfully registered ${driverData.firstname} ${driverData.lastname} and ${driverData._id}`;
 
-
+    const driverData = await addDriver(user);
+    if(!driverData.error) {
         // Set user's cookies here before redirecting
-        const token = getUserAuthToken(driverData);
+        const token = getUserAuthToken(JSON.parse(JSON.stringify(driverData)));
 
-        // Redirect the user to the User dashboard route
         res.cookie('authorization', `${token}`);
+        // Redirect the user to the User dashboard route
         
-        // return res.status(200).redirect('/users/getorders'); ---work with this when available!
-
-        
-    } catch (error) {
-        message = `Email has been claimed please choose another email`;
-        return res.status(200).render('index', { page: 'signup' , message: message });    
-        
+        // return res.status(200).redirect('/drivers/allorders'); ---use when page is available
+        return res.status(200).render('index', { message: 'Successful added driver' })
+    }
+ 
+    if(driverData.error){
+        return res.status(200).render('index', {page: 'signup', message: driverData.error }); 
     }
 }
+
+//loginUser;
+export async function logIn(req: Request, res: Response) {
+    try {
+      let user: Login = {
+        emailAddress: req.body.emailAddress,
+        password: req.body.password,
+      }
+      const { error } = await validateLoginInput(user)
+      if (!error) {
+        const dataObj = await logInDriver(user)
+        if (dataObj && (await bcrypt.compare(user.password, dataObj.password))) {
+          return res.status(200).render('index', { message: 'Successful login' })
+        } else {
+          res.status(400)
+          throw new Error('Invalid emailAddress or password')
+        }
+      }
+    } catch (err) {
+        return res.render('index', { page: 'signup' , message: err }); 
+    }
+  }
