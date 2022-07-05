@@ -1,5 +1,5 @@
 import express, { Router, Response, Request } from 'express';
-import { createUser } from '../controllers/users';
+import { createUser, logIn } from '../controllers/users';
 const router = Router();
 
 /* GET users listing. */
@@ -7,9 +7,13 @@ const router = Router();
 router.get('/register', function(req, res, next) {
   res.render('userregisterpage');
 });
-//--
 router.post('/register', createUser);
 
+//--login
+router.get('/login', function(req, res, next) {
+  res.render('login');
+});
+router.post('/login', logIn);
 
 
 

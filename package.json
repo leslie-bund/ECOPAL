@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./dist/bin/www"
+    "start": "DEBUG=ecopal:server node ./dist/bin/www",
+    "dev": ""
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

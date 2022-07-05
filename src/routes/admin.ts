@@ -1,5 +1,5 @@
 import express, { Router, Response, Request } from 'express';
-import { createAdmin } from '../controllers/admin';
+import { createAdmin, logIn } from '../controllers/admin';
 const router = Router();
 
 router.get('/',(req: Request, res: Response) => {
@@ -33,6 +33,12 @@ router.post('/updatePrice', function(req, res, next) {
 router.post('/register', createAdmin);
 router.get('/',(req: Request, res: Response) => {
     res.render('adminregform');
-})
+});
+
+//--login
+router.get('/login', function (req, res, next) {
+    res.render('login')
+  })
+  router.post('/login',logIn);
 
 export default router;

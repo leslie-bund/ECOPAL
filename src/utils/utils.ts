@@ -1,5 +1,3 @@
-import * as fs from 'fs'
-import { Stream } from 'stream'
 import Joi from 'joi'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken';
@@ -35,6 +33,11 @@ export interface AdminReg{
     password: string
     confirmPassword: string
 }
+
+export interface Login {
+    emailAddress: string
+    password: string
+  }
 
 
 export async function validateUserRegInput(user: UserReg) {
@@ -106,6 +109,20 @@ export async function hashPassword(password: string) {
     const hashed = await bcrypt.hash(password, salt)
     return hashed
 }
+
+//--Validate login users;
+export async function validateLoginInput(user: Login) {
+    const schema = Joi.object({
+      emailAddress: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: { allow: ['com', 'net'] },
+      }),
+      password: Joi.string()
+        .pattern(new RegExp('^[a-zA-Z0-9]{3,1024}$'))
+        .required(),
+    })
+    return schema.validate(user);
+  }
 
 //logout
 export const logout =( async function(req: Request, res: Response, next: NextFunction){
