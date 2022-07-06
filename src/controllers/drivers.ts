@@ -22,7 +22,7 @@ export async function createDriver(req: Request, res: Response) {
     const { value, error } = await validateDriverRegInput (user);
     if(error){
         const err: string = error.details[0].message;
-        return res.status(400).render('index', { message: error.details[0].message });
+        return res.status(400).render('index', { page: 'signup', message: error.details[0].message });
     }
 
     // Provide DNS mx Records lookup
@@ -44,7 +44,8 @@ export async function createDriver(req: Request, res: Response) {
         // Redirect the user to the User dashboard route
         
         // return res.status(200).redirect('/drivers/allorders'); ---use when page is available
-        return res.status(200).render('index', { message: 'Successful added driver' })
+        res.redirect('/drivers/allorders');
+        // return res.status(200).render('index', { page: 'home', message: 'Successful added driver' })
     }
  
     if(driverData.error){
@@ -62,18 +63,19 @@ export async function logIn(req: Request, res: Response) {
       const { error } = await validateLoginInput(user)
       if (!error) {
         const dataObj = await logInDriver(user)
-        if (dataObj && (await bcrypt.compare(user.password, dataObj.password))) {
+        if (!dataObj?.error && (await bcrypt.compare(user.password, dataObj?.value.password))) {
             const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
             res.cookie('authorization', `${token}`);
 
             //Redirect to driver dashboard
-            return res.status(200).render('index', { message: 'Successful login' })
+            res.redirect('/drivers/allorders');
+            // return res.status(200).render('index', { page: 'home', message: 'Successful login' })
         } else {
           res.status(400)
           throw new Error('Invalid emailAddress or password')
         }
       }
     } catch (err) {
-        return res.render('index', { page: 'signup' , message: err }); 
+        return res.render('index', { page: 'login' , message: err }); 
     }
   }

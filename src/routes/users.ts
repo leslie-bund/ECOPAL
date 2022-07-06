@@ -11,7 +11,7 @@ router.use(verifyUser);
 
 
 router.get('/getorders', function(req, res, next) {
-
+    return res.status(200).render('index', { page: 'home', message: 'Successful logged in user' })
 })
 
 router.post('/post', function(req, res, next) {

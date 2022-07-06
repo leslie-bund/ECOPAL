@@ -35,11 +35,10 @@ export async function logInDriver(user: Login) {
     //check database for user details
     try {
       const confirmDriver = await DriverData.findOne({ emailAddress: user.emailAddress }).exec();
-      debug(confirmDriver);
-      console.log('conBug'+confirmDriver);
       if (confirmDriver){
-        return JSON.parse(JSON.stringify(confirmDriver));
+        return { value: JSON.parse(JSON.stringify(confirmDriver)), error: null };
       }
+      return { error: true }
     } catch (err) {
       const dataObj = { value: null, error: err }
       return dataObj

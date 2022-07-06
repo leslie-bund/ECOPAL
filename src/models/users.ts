@@ -35,13 +35,12 @@ export async function logInUser(user: Login) {
   //check database for user details
   try {
     const confirmUser = await UserData.findOne({ emailAddress: user.emailAddress }).exec();
-    debug(confirmUser);
     if (confirmUser){
-      return JSON.parse(JSON.stringify(confirmUser));
+      return { value: JSON.parse(JSON.stringify(confirmUser)), error: null };
     }
-    
+    return { error: true }
   } catch (err) {
-    const dataObj = { value: null, error: err }
+    const dataObj = { value: null, error: err };
     return dataObj
   }
 }

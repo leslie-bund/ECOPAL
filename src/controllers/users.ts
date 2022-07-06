@@ -45,7 +45,8 @@ export async function createUser(req: Request, res: Response) {
         res.cookie('authorization', `${token}`);
 
         // return res.status(200).redirect('/users/getorders'); ---work with this when available!
-        return res.status(200).render('index', { page: 'login' , message: 'Successful Login' });
+        res.redirect('/users/getorders');
+        // return res.status(200).render('index', { page: 'home' , message: 'Successful Signup' });
     }
 }
 
@@ -56,15 +57,16 @@ export async function logIn(req: Request, res: Response) {
       emailAddress: req.body.emailAddress,
       password: req.body.password,
     }
-    const { error } = await validateLoginInput(user)
+    const { error } = await validateLoginInput(user);
     if (!error) {
       const dataObj = await logInUser(user)
-      if (dataObj && (await bcrypt.compare(user.password, dataObj.password))) {
+      if (!dataObj?.error && (await bcrypt.compare(user.password, dataObj?.value.password))) {
         const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
         res.cookie('authorization', `${token}`);
-
-        // Redirect to user dashboard
-        return res.status(200).render('index', { message: 'Successful login' })
+        
+        // Redirect to user dashboard --when dashboard is ready
+        res.redirect('/users/getorders');
+        // return res.status(200).render('index', { page: 'home', message: 'Successful login' })
       } else {
         res.status(400)
         throw new Error('Invalid emailAddress or password')

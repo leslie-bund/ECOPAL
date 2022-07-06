@@ -118,6 +118,7 @@ const secretKey = process.env.JWT_SECRET_KEY;
 
 export function getUserAuthToken(user: user) {
     const { password, ...authUser } = user;
+    debug('Secret key: ', secretKey);
     if (secretKey) {
         return jwt.sign({ ...authUser, time: Date.now() }, secretKey, { expiresIn: 300 }) 
     }
@@ -129,11 +130,17 @@ export async function verifyUser(req: Request, res: Response, next: NextFunction
     try {
         if(secretKey) {
             const payload = jwt.verify(token, secretKey);
+            debug('Payload: ',payload);
             const confirmUser = await UserData.findOne(JSON.parse(JSON.stringify(payload))).exec();
-            next();
+            if(confirmUser) {
+                next();
+            } else {
+                return res.status(400).render('index', { page: 'login' , message: 'Please login with valid details' });
+            }
         }
     } catch (error) {
-        debug(error);
+        // debug(error);
+        res.end();
     }
 }
 
@@ -144,10 +151,15 @@ export async function verifyDriver(req: Request, res: Response, next: NextFuncti
         if(secretKey) {
             const payload = jwt.verify(token, secretKey);
             const confirmUser = await DriverData.findOne(JSON.parse(JSON.stringify(payload))).exec();
-            next();
+            if(confirmUser) {
+                next();
+            } else {
+                return res.status(400).render('index', { page: 'login' , message: 'Please login with valid details' });
+            }
         }
     } catch (error) {
-        debug(error);
+        // debug(error);
+        res.end();
     }
 }
 
@@ -159,9 +171,14 @@ export async function verifyAdmin(req: Request, res: Response, next: NextFunctio
         if(secretKey) {
             const payload = jwt.verify(token, secretKey);
             const confirmUser = await AdminData.findOne(JSON.parse(JSON.stringify(payload))).exec();
-            next();
+            if(confirmUser) {
+                next();
+            } else {
+                return res.status(400).render('index', { page: 'login' , message: 'Please login with valid details' });
+            }
         }
     } catch (error) {
-        debug(error);
+        // debug(error);
+        res.end();
     }
 }

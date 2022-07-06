@@ -32,10 +32,10 @@ export async function logInAdmin(user: Login) {
     //check database for user details
     try {
       const confirmAdmin = await AdminData.findOne({ emailAddress: user.emailAddress }).exec();
-      
       if (confirmAdmin){
-        return JSON.parse(JSON.stringify(confirmAdmin));
+        return { value: JSON.parse(JSON.stringify(confirmAdmin)), error: null };
       }
+      return { error: true }
     } catch (err) {
       const dataObj = { value: null, error: err }
       return dataObj

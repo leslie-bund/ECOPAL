@@ -39,7 +39,8 @@ export async function createAdmin(req: Request, res: Response) {
         res.cookie('authorization', `${token}`);
 
         // return res.status(200).redirect('/users/getorders'); ---work with this when available!
-          return res.status(200).render('index', { value: 'Successful signup admin' });
+        res.redirect('/admin/alldrivers');
+        // return res.status(200).render('index', { page: 'home', value: 'Successful signup admin' });
     }
 
     if(adminData.error) {
@@ -59,12 +60,13 @@ export async function logIn(req: Request, res: Response) {
       const { error } = await validateLoginInput(user);
       if (!error) {
         const dataObj = await logInAdmin(user)
-        if (dataObj && (await bcrypt.compare(user.password, dataObj.password))) {
+        if (!dataObj?.error && (await bcrypt.compare(user.password, dataObj?.value.password))) {
             const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
             res.cookie('authorization', `${token}`);
 
             // redirect to Admin dashboard.
-            return res.status(200).render('index', { value: 'Successful login admin' });
+            res.redirect('/admin/alldrivers');
+            // return res.status(200).render('index', { page: 'home', value: 'Successful login admin' });
         } else {
           res.status(400);
           throw new Error('Invalid emailAddress or password');

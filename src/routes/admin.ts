@@ -10,6 +10,7 @@ router.post('/login',logIn);
 router.use(verifyAdmin)
 
 router.get('/alldrivers', function(req, res, next) {
+    return res.status(200).render('index', { page: 'home', message: 'Successful logged in Admin' });
 
 })
 
