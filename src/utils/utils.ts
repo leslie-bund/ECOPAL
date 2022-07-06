@@ -1,43 +1,14 @@
 import Joi from 'joi'
 import bcrypt from 'bcrypt'
+import dns from 'dns/promises';
 import jwt from 'jsonwebtoken';
-import express, { Response, Request, NextFunction } from 'express'
+import { Response, Request, NextFunction } from 'express';
+import { AdminData } from '../models/admin';
+import { DriverData } from '../models/drivers';
+import { UserData } from '../models/users';
+var debug = require('debug')('ecopal:server');
 
 
-export interface UserReg {
-    firstname: string
-    lastname: string
-    emailAddress: string
-    phone: string
-    address: string
-    zipcode: string
-    password: string
-    confirmPassword: string
-}
-
-export interface DriverReg{
-    firstname: string
-    lastname: string
-    emailAddress: string
-    phone: string
-    address: string
-    zipcode: string
-    licenseNumber: string
-    password: string
-    confirmPassword: string
-}
-
-export interface AdminReg{
-    companyName: string
-    emailAddress: string
-    password: string
-    confirmPassword: string
-}
-
-export interface Login {
-    emailAddress: string
-    password: string
-  }
 
 
 export async function validateUserRegInput(user: UserReg) {
@@ -131,6 +102,66 @@ export const logout =( async function(req: Request, res: Response, next: NextFun
     res.cookie('user', '')
     req.cookies.user = ''
     // res.cookie(req.cookies.token, '') 
-    res.status(200).redirect('/users/login');
+    res.status(200).redirect('/');
 })
 
+export async function emailHasMxRecord(email: string): Promise<boolean> {
+    try {
+        const domain = email.split('@')[1];
+        const record = await dns.resolveMx(domain);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+const secretKey = process.env.JWT_SECRET_KEY;
+
+export function getUserAuthToken(user: user) {
+    const { password, ...authUser } = user;
+    if (secretKey) {
+        return jwt.sign({ ...authUser, time: Date.now() }, secretKey, { expiresIn: 300 }) 
+    }
+}
+
+export async function verifyUser(req: Request, res: Response, next: NextFunction) {
+    const token = req.cookies.authorization;
+
+    try {
+        if(secretKey) {
+            const payload = jwt.verify(token, secretKey);
+            const confirmUser = await UserData.findOne(JSON.parse(JSON.stringify(payload))).exec();
+            next();
+        }
+    } catch (error) {
+        debug(error);
+    }
+}
+
+export async function verifyDriver(req: Request, res: Response, next: NextFunction) {
+    const token = req.cookies.authorization;
+
+    try {
+        if(secretKey) {
+            const payload = jwt.verify(token, secretKey);
+            const confirmUser = await DriverData.findOne(JSON.parse(JSON.stringify(payload))).exec();
+            next();
+        }
+    } catch (error) {
+        debug(error);
+    }
+}
+
+
+export async function verifyAdmin(req: Request, res: Response, next: NextFunction) {
+    const token = req.cookies.authorization;
+
+    try {
+        if(secretKey) {
+            const payload = jwt.verify(token, secretKey);
+            const confirmUser = await AdminData.findOne(JSON.parse(JSON.stringify(payload))).exec();
+            next();
+        }
+    } catch (error) {
+        debug(error);
+    }
+}

@@ -1,12 +1,9 @@
-import express, { Response, Request } from 'express'
-import { addUser, logInUser } from '../models/users'
-import {
-  Login,
-  UserReg,
-  validateLoginInput,
-  validateUserRegInput,
-} from '../utils/utils'
-import bcrypt from 'bcrypt'
+import express, { Response, Request } from 'express';
+import { addUser, logInUser } from '../models/users';
+import { validateUserRegInput, emailHasMxRecord, getUserAuthToken, validateLoginInput } from '../utils/utils';
+import bcrypt from 'bcrypt';
+var debug = require('debug')('ecopal:server');
+
 
 export async function createUser(req: Request, res: Response) {
   //define the request from the user;
@@ -18,30 +15,38 @@ export async function createUser(req: Request, res: Response) {
     address: req.body.address,
     zipcode: req.body.zipcode,
     password: req.body.password,
-    confirmPassword: req.body.confirmPassword,
-  }
+    confirmPassword: req.body.confirmPassword
+    }
 
-  //validate input;
-  const { value, error } = await validateUserRegInput(user)
-  if (error) {
-    const err: string = error.details[0].message
-    res.locals.message = err;
-    res.locals.error = err
-    return res.status(400).render('error')
-  }
-  // Perform User email DNS mxRecord lookup
+    //validate input;
+    const { value, error } = await validateUserRegInput (user);
+    if(error){
+        return res.status(400).render('index', { page: 'signup', message: error.details[0].message });
+    }
 
-  const userData = await addUser(user)
-  const message = 'Successfully registered'
-  if (userData.error) {
-    res.locals.message = userData.error;
-    res.locals.error = userData.error;
-    return res.render('error')
-  }
-  return res
-    .status(200)
-    .render('index', { value: userData.value, message: message })
-  // return res.status(200).redirect('/users/getorders'); ---work with this when available!
+    // Perform User email DNS mxRecord lookup
+    const validMail = await emailHasMxRecord(value.emailAddress);
+
+    if (!validMail) {
+        const message = `Please provide a working email address`;
+        return res.status(400).render('index', { page: 'signup', message: message });
+    }
+
+    const userData = await addUser(user);
+    if (userData.error) {
+        return res.status(200).render('index', { page: 'signup' , message: userData }); 
+    }
+
+    if(!userData.error) {
+        // Set user's cookies here before redirecting
+        const token = getUserAuthToken(JSON.parse(JSON.stringify(userData)));
+
+        // Redirect the user to the User dashboard route
+        res.cookie('authorization', `${token}`);
+
+        // return res.status(200).redirect('/users/getorders'); ---work with this when available!
+        return res.status(200).render('index', { page: 'login' , message: 'Successful Login' });
+    }
 }
 
 //loginUser;
@@ -55,15 +60,17 @@ export async function logIn(req: Request, res: Response) {
     if (!error) {
       const dataObj = await logInUser(user)
       if (dataObj && (await bcrypt.compare(user.password, dataObj.password))) {
-        return res.status(200).render('index', { value: 'Successful login' })
+        const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
+        res.cookie('authorization', `${token}`);
+
+        // Redirect to user dashboard
+        return res.status(200).render('index', { message: 'Successful login' })
       } else {
         res.status(400)
         throw new Error('Invalid emailAddress or password')
       }
     }
   } catch (err) {
-    res.locals.message = err;
-    res.locals.error = err
-    res.render('error')
+    return res.status(400).render('index', { page: 'login' , message: err });
   }
 }

@@ -1,6 +1,7 @@
-import express, { Response, Request } from 'express';
+import { Response, Request } from 'express';
+import { validateAdminRegInput, emailHasMxRecord, validateLoginInput, getUserAuthToken } from '../utils/utils';
+var debug = require('debug')('ecopal:server');
 import { addAdmin, logInAdmin } from '../models/admin';
-import { AdminReg, Login, validateAdminRegInput, validateLoginInput } from '../utils/utils';
 import bcrypt from 'bcrypt'
 
 
@@ -13,27 +14,39 @@ export async function createAdmin(req: Request, res: Response) {
     }
 
     //validate input;
-    const { error } = await validateAdminRegInput(user);
+    const { value, error } = await validateAdminRegInput(user);
     if(error){
         const err: string = error.details[0].message;
-        res.locals.message = err;
-        res.locals.error = err
-        res.status(400).render('error')
-        // return res.status(400).render('error', {error: err});
+        return res.status(400).render('index', { page: 'signup', message: error.details[0].message });
     }
 
     // Provide DNS mxRecord Lookup for Admin
+    const validMail = await emailHasMxRecord(value.emailAddress);
+
+    if (!validMail) {
+        const message = `Please provide a working email address`;
+        return res.status(400).render('index', { page: 'signup', message: message });
+    }
+
 
     const adminData = await addAdmin(user);
-    const message = 'Successfully registered';
-    if(adminData.error){
-        res.locals.message = adminData.error;
-        res.locals.error = adminData.error;
-        res.status(404).render('error')
-        // return res.render('error', {error: adminData.error})
+
+    // Set user's cookies here before redirecting
+    if(!adminData.error) {
+        const token = getUserAuthToken(JSON.parse(JSON.stringify(adminData.value)));
+
+        // Redirect the user to the User dashboard route
+        res.cookie('authorization', `${token}`);
+
+        // return res.status(200).redirect('/users/getorders'); ---work with this when available!
+          return res.status(200).render('index', { value: 'Successful signup admin' });
     }
-    return res.status(200).render('index', {value: adminData.value, message: message});  //--remove when allorders page is available.
-    // return res.status(200).redirect('/admin/alldrivers') -- use when page is available.
+
+    if(adminData.error) {
+        let message = `Email has been claimed please choose another email`;
+        return res.status(200).render('index', { page: 'signup' , message: message });   
+    }
+
 }
 
 //loginUser;
@@ -43,19 +56,21 @@ export async function logIn(req: Request, res: Response) {
         emailAddress: req.body.emailAddress,
         password: req.body.password,
       }
-      const { error } = await validateLoginInput(user)
+      const { error } = await validateLoginInput(user);
       if (!error) {
         const dataObj = await logInAdmin(user)
         if (dataObj && (await bcrypt.compare(user.password, dataObj.password))) {
-          return res.status(200).render('index', { value: 'Successful login' })
+            const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
+            res.cookie('authorization', `${token}`);
+
+            // redirect to Admin dashboard.
+            return res.status(200).render('index', { value: 'Successful login admin' });
         } else {
-          res.status(400)
-          throw new Error('Invalid emailAddress or password')
+          res.status(400);
+          throw new Error('Invalid emailAddress or password');
         }
       }
     } catch (err) {
-      res.locals.message = err;
-      res.locals.error = err
-      res.render('error')
+        return res.render('index', { page: 'login' , message: err });
     }
   }

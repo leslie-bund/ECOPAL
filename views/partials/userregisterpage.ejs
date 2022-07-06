@@ -1,66 +1,48 @@
     <div id="userRegForm" class="registration-form">
         <h5>Let us rid you of trash</h5>
-        
         <form action="/users/register" method="post">
             <div class="user-details">
-            <div class="input-box">
-                <label>First name</label>
-                <input type="text" name="firstname" required>
-            </div>
-            <div class="input-box">
-                <label>Last name</label>
-                <input type="text" name="lastname" required>
-            </div>
-            <div class="input-box">
-                <label>Email address</label>
-                <input type="email" name="emailAddress" required>
-            </div>
-            <div class="input-box">
-                <label>Phone number</label>
-                <input type="number" name="phone" required>
-            </div>
-            <div class="flex">
                 <div class="input-box">
-                    <label>Address</label>
-                    <input type="text" name="address" required>
+                    <label>First name</label>
+                    <input type="text" name="firstname" required>
                 </div>
-                <!-- <div class="input-box">
-                    <label>City/State</label>
-                    <input disabled value="Lagos" type="text">
-                </div> -->
                 <div class="input-box">
-                    <label>Post code/Zip code</label>
-                    <input type="text" name="zipcode" required>
+                    <label>Last name</label>
+                    <input type="text" name="lastname" required>
                 </div>
-            </div>
-            <div class="input-box">
-                <label>Password</label>
-                <input type="text" name="password" required>
-            </div>
-            <div class="input-box">
-                <label>Confirm password</label>
-                <input type="text" name="confirmPassword" required>
-            </div>
+                <div class="input-box">
+                    <label>Email address</label>
+                    <input type="email" name="emailAddress" required>
+                </div>
+                <div class="input-box">
+                    <label>Phone number</label>
+                    <input type="tel" name="phone" required>
+                </div>
+                <div class="flex">
+                    <div class="input-box">
+                        <label>Address</label>
+                        <input type="text" name="address" required>
+                    </div>
+                    <div class="input-box" style="margin: 0px 5px;">
+                        <label>State</label>
+                        <input disabled value="Lagos" type="text">
+                    </div>
+                    <div class="input-box">
+                        <label>Post code/Zip code</label>
+                        <input type="text" name="zipcode" required>
+                    </div>
+                </div>
+                <div class="input-box">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="input-box">
+                    <label>Confirm password</label>
+                    <input type="password" name="confirmPassword" required>
+                </div>
             </div>
             <button type="submit" class="btn">Submit</a></button>
         </form>    
     </div>
-    <!-- <script>
-        "use strict";
-        var x = document.getElementById("login-form-password");   // Input
-        var h = document.getElementById("Layer_2");               // Hide pass
-        var s = document.getElementById("Layer_1");            // Show pass
-        function togglePass() {
-            if (x.type === "password") {
-                x.type = 'text';
-                s.style.display = 'none';
-                h.style.display = 'inline';
-            } else {
-                x.type = 'password';
-                s.style.display = 'inline';
-                h.style.display = 'none';
-            }   
-        }
-    </script> -->
 </section>
 

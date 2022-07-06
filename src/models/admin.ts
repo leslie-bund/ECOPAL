@@ -1,14 +1,16 @@
-import mongoose from 'mongoose'
-import { AdminReg, hashPassword, Login } from '../utils/utils'
-const debug = require('debug')('ecopal:server');
+import mongoose from "mongoose";
+import { hashPassword } from "../utils/utils";
+var debug = require('debug')('ecopal:server');
+
 
 const adminRegSchema = new mongoose.Schema({
-  companyName: String,
-  emailAddress: String,
-  password: String,
+    companyName: String,
+    emailAddress: {type: String, unique: true},
+    password: String,
+    role: { type: String, default: 'admin' }
 })
 
-const AdminData = mongoose.model('AdminData', adminRegSchema)
+export const AdminData = mongoose.model('AdminData', adminRegSchema);
 export async function addAdmin(user: AdminReg) {
   try {
     const adminData = new AdminData(user)
@@ -30,8 +32,7 @@ export async function logInAdmin(user: Login) {
     //check database for user details
     try {
       const confirmAdmin = await AdminData.findOne({ emailAddress: user.emailAddress }).exec();
-      debug(confirmAdmin);
-      console.log('conBug'+confirmAdmin);
+      
       if (confirmAdmin){
         return JSON.parse(JSON.stringify(confirmAdmin));
       }

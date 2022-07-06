@@ -1,30 +1,30 @@
-import mongoose from 'mongoose'
-import { DriverReg, hashPassword, Login } from '../utils/utils'
-const debug = require('debug')('ecopal:server');
+import { string } from "joi";
+import mongoose from "mongoose";
+import { hashPassword } from "../utils/utils";
+var debug = require('debug')('ecopal:server');
 
 const driverRegSchema = new mongoose.Schema({
-  firstname: String,
-  lastname: String,
-  emailAddress: String,
-  phone: String,
-  address: String,
-  zipcode: String,
-  licenseNumber: String,
-  password: String,
+    firstname: String,
+    lastname: String,
+    emailAddress: {type: String, unique: true},
+    phone: String,
+    address: String,
+    zipcode: String,
+    licenseNumber: String,
+    password: String,
+    role: { type: String, default: 'driver' },
+    status: {type: String, default: 'suspended'},
 })
 
-const DriverData = mongoose.model('DriverData', driverRegSchema)
+export const DriverData = mongoose.model('DriverData', driverRegSchema)
 export async function addDriver(user: DriverReg) {
   try {
     const driverData = new DriverData(user)
     driverData.password = await hashPassword(user.password)
     const value = await driverData.save()
     const dataObj = { value: value, error: null }
-    return dataObj
-    // return value;
+    return dataObj;
   } catch (err) {
-    console.error(err)
-    // return err;
     const dataObj = { value: null, error: err }
     return dataObj
   }

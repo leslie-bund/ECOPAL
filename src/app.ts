@@ -4,16 +4,15 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import mongoose from 'mongoose';
-import helmet from 'helmet';
-import { env } from 'process'
 import dotenv from 'dotenv';
+var debug = require('debug')('ecopal:server');
 
 //--Defining the database.
 dotenv.config();
 mongoose.connect(<string>process.env.MONGO_URL).then(()=>{
-  console.log('connected to mongoDb');
+  debug('connected to mongoDb');
 }).catch(err => {
-  console.error('could not connect to mongoDb', err)
+  console.error('could not connect to mongoDb\n', err)
 })
 
 //--Defining the router

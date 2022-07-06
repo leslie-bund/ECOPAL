@@ -1,8 +1,8 @@
 import express, { Response, Request } from 'express';
 import { addDriver, logInDriver } from '../models/drivers';
-import { logInUser } from '../models/users';
-import { DriverReg, validateDriverRegInput, Login, validateLoginInput } from '../utils/utils';
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
+import { validateDriverRegInput, emailHasMxRecord, getUserAuthToken, validateLoginInput } from '../utils/utils';
+var debug = require('debug')('ecopal:server');
 
 
 export async function createDriver(req: Request, res: Response) {
@@ -19,27 +19,37 @@ export async function createDriver(req: Request, res: Response) {
         confirmPassword: req.body.confirmPassword
     }
     //validate input;
-    const { error } = await validateDriverRegInput (user);
+    const { value, error } = await validateDriverRegInput (user);
     if(error){
         const err: string = error.details[0].message;
-        res.locals.message = err;
-        res.locals.error = err
-        return res.status(400).render('error')
-        // return res.status(400).render('error', { error: err });
+        return res.status(400).render('index', { message: error.details[0].message });
     }
 
     // Provide DNS mx Records lookup
+    const validMail = await emailHasMxRecord(value.emailAddress);
+
+    if (!validMail) {
+        const message = `Please provide a working email address`;
+        return res.status(205).render('index', { page: 'signup', message: message });
+    }
+
+    let message;
 
     const driverData = await addDriver(user);
-    const message = 'Successfully registered';
-    if(driverData.error){
-        res.locals.message = driverData.error;
-        res.locals.error = driverData.error;
-        res.status(404).render('error')
-        // return res.render('error', {error: driverData.error})
+    if(!driverData.error) {
+        // Set user's cookies here before redirecting
+        const token = getUserAuthToken(JSON.parse(JSON.stringify(driverData)));
+
+        res.cookie('authorization', `${token}`);
+        // Redirect the user to the User dashboard route
+        
+        // return res.status(200).redirect('/drivers/allorders'); ---use when page is available
+        return res.status(200).render('index', { message: 'Successful added driver' })
     }
-    return res.status(200).render('index', {value: driverData.value, message: message }); //--remove when allorders page is available.
-    // return res.status(200).redirect('/drivers/allorders'); ---use when page is available
+ 
+    if(driverData.error){
+        return res.status(200).render('index', {page: 'signup', message: driverData.error }); 
+    }
 }
 
 //loginUser;
@@ -53,15 +63,17 @@ export async function logIn(req: Request, res: Response) {
       if (!error) {
         const dataObj = await logInDriver(user)
         if (dataObj && (await bcrypt.compare(user.password, dataObj.password))) {
-          return res.status(200).render('index', { value: 'Successful login' })
+            const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
+            res.cookie('authorization', `${token}`);
+
+            //Redirect to driver dashboard
+            return res.status(200).render('index', { message: 'Successful login' })
         } else {
           res.status(400)
           throw new Error('Invalid emailAddress or password')
         }
       }
     } catch (err) {
-      res.locals.message = err;
-      res.locals.error = err
-      res.render('error')
+        return res.render('index', { page: 'signup' , message: err }); 
     }
   }

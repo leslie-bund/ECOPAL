@@ -1,30 +1,30 @@
-import mongoose from 'mongoose'
-import { UserReg, hashPassword, Login } from '../utils/utils'
-const debug = require('debug')('ecopal:server');
+import mongoose from "mongoose";
+import { hashPassword } from "../utils/utils";
+var debug = require('debug')('ecopal:server');
+
 
 const userRegSchema = new mongoose.Schema({
-  firstname: String,
-  lastname: String,
-  emailAddress: String,
-  phone: String,
-  address: String,
-  zipcode: String,
-  password: String,
+    firstname: String,
+    lastname: String,
+    emailAddress: {type: String, unique: true},
+    phone: String,
+    address: String,
+    zipcode: String,
+    password: String,
+    role: { type: String, default: 'user' }
+
 })
 
-const UserData = mongoose.model('UserData', userRegSchema)
+export const UserData = mongoose.model('UserData', userRegSchema)
 //Post user
 export async function addUser(user: UserReg) {
   try {
-        const userData = new UserData(user)
-        userData.password = await hashPassword(user.password)
-        const value = await userData.save()
-        const dataObj = { value: value, error: null }
-        return dataObj
-    // return value;
-    } catch (err) {
-    console.error(err)
-    // return err;
+      const userData = new UserData(user)
+      userData.password = await hashPassword(user.password)
+      const value = await userData.save()
+      const dataObj = { value: value, error: null }
+      return dataObj;
+  } catch (err) {
     const dataObj = { value: null, error: err }
     return dataObj
   }

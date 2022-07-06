@@ -85,7 +85,36 @@ nav {
   transition: all ease-in 0.3s;
 }
 
+.alert.open {
+  right: 0;
+  opacity: 75%;
+}
 
+.alert {
+  position: absolute;
+  top: 5rem;
+  right: -500px;
+  padding: 5px 15px;
+  opacity: 0;
+  border-radius: 10px;
+  min-height: 5rem;
+  max-width: 500px;
+  background-color: aquamarine;
+  transition: ease-in 1s;
+}
+
+.d-none {
+  display: none;
+}
+
+.alert-close {
+  text-align: end;
+  cursor: pointer;
+  display: inherit;
+  color: teal;
+  padding: 5px 10px;
+  font-weight: 500;
+}
 /* forms */
 /* 
 .registration-form {
@@ -230,7 +259,19 @@ label {
   color: lawngreen;
 }
 
-
+.home-hero {
+  display: flex;
+  justify-content: center;
+  padding-top: 200px;
+  align-items: center;
+  line-break: normal;
+  text-overflow: ellipsis;
+  text-align: center;
+  color: teal;
+  text-shadow: 5px 5px 0px lawngreen;
+  font-weight: 900;
+  font-size: 2rem;
+}
   
 
 
