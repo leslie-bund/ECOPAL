@@ -60,6 +60,10 @@ export async function logIn(req: Request, res: Response) {
     if (!error) {
       const dataObj = await logInUser(user)
       if (dataObj && (await bcrypt.compare(user.password, dataObj.password))) {
+        const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
+        res.cookie('authorization', `${token}`);
+
+        // Redirect to user dashboard
         return res.status(200).render('index', { message: 'Successful login' })
       } else {
         res.status(400)

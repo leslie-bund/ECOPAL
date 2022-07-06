@@ -63,7 +63,11 @@ export async function logIn(req: Request, res: Response) {
       if (!error) {
         const dataObj = await logInDriver(user)
         if (dataObj && (await bcrypt.compare(user.password, dataObj.password))) {
-          return res.status(200).render('index', { message: 'Successful login' })
+            const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
+            res.cookie('authorization', `${token}`);
+
+            //Redirect to driver dashboard
+            return res.status(200).render('index', { message: 'Successful login' })
         } else {
           res.status(400)
           throw new Error('Invalid emailAddress or password')

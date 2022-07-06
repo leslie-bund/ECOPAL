@@ -60,7 +60,11 @@ export async function logIn(req: Request, res: Response) {
       if (!error) {
         const dataObj = await logInAdmin(user)
         if (dataObj && (await bcrypt.compare(user.password, dataObj.password))) {
-          return res.status(200).render('index', { value: 'Successful login admin' });
+            const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
+            res.cookie('authorization', `${token}`);
+
+            // redirect to Admin dashboard.
+            return res.status(200).render('index', { value: 'Successful login admin' });
         } else {
           res.status(400);
           throw new Error('Invalid emailAddress or password');

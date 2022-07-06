@@ -1,3 +1,4 @@
+import { string } from "joi";
 import mongoose from "mongoose";
 import { hashPassword } from "../utils/utils";
 var debug = require('debug')('ecopal:server');
@@ -11,7 +12,8 @@ const driverRegSchema = new mongoose.Schema({
     zipcode: String,
     licenseNumber: String,
     password: String,
-    role: { type: String, default: 'driver' }
+    role: { type: String, default: 'driver' },
+    status: {type: String, default: 'suspended'},
 })
 
 export const DriverData = mongoose.model('DriverData', driverRegSchema)
