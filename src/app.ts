@@ -10,7 +10,7 @@ var debug = require('debug')('ecopal:server');
 //--Defining the database.
 dotenv.config();
 mongoose.connect(<string>process.env.MONGO_URL).then(()=>{
-  debug('connected to mongoDb');
+  console.log('connected to mongoDb');
 }).catch(err => {
   console.error('could not connect to mongoDb\n', err)
 })

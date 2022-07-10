@@ -1,6 +1,6 @@
 import express, { Router, Response, Request } from 'express';
 import { verifyUser } from '../utils/utils';
-import { createUser, logIn } from '../controllers/users';
+import { createUser, logIn, updateUser, update  } from '../controllers/users';
 import { makeNewOrder } from '../controllers/orders';
 var debug = require('debug')('ecopal:server');
 const router = Router();
@@ -23,7 +23,7 @@ router.get('/getorders', function(req, res, next) {
 })
 
 router.post('/post', function(req, res, next) {
-
+    
 })
 
 
@@ -31,13 +31,14 @@ router.post('/post', function(req, res, next) {
 router.post('/pay', makeNewOrder)
 
 router.put('/orders/confirm', function(req, res, next) {
-
+    
 })
 
 router.put('/orders/:id', function(req, res, next) {
-
+    
 })
 
-// Add new routes for users after login
+router.use(verifyUser);
+
 
 export default router;

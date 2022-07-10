@@ -1,10 +1,15 @@
 import express, { Router, Response, Request } from 'express';
 import { verifyDriver } from '../utils/utils';
-import { createDriver, logIn } from '../controllers/drivers';
+import { createDriver, logIn, update } from '../controllers/drivers';
 const router = Router();
 
 router.post('/register', createDriver);
 router.post('/login',logIn);
+
+//update driver info
+router.put('/update/:id', update);
+
+// router.get('/update/:id', updateDriver);
 
 
 router.use(verifyDriver);

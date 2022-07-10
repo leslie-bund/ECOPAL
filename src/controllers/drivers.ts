@@ -1,5 +1,5 @@
 import express, { Response, Request } from 'express';
-import { addDriver, logInDriver } from '../models/drivers';
+import { addDriver, editDriver, logInDriver } from '../models/drivers';
 import bcrypt from 'bcrypt';
 import { validateDriverRegInput, emailHasMxRecord, getUserAuthToken, validateLoginInput } from '../utils/utils';
 var debug = require('debug')('ecopal:server');
@@ -77,3 +77,21 @@ export async function logIn(req: Request, res: Response) {
         return res.render('index', { page: 'login' , message: err }); 
     }
   }
+
+
+//update
+export async function update (req: Request, res: Response){
+  if(!req.body){
+      const message = 'No data provided'
+      return res.status(400).render('error', {error: message});
+  }
+  const result = await editDriver(req.params.id, req.body);
+ if(result.error){
+     return res.status(404).render('error', {error: result.error});
+ }
+ console.log("Bug"+req.body);
+ console.log("Bug2"+result.value);
+ return res.status(200).render('index',{page: 'login', message: result.value});
+//    res.status(200).redirect('/users/getallorders'); --use when page is ready.
+
+}

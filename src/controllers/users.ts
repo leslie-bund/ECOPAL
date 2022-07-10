@@ -1,5 +1,5 @@
 import express, { Response, Request } from 'express';
-import { addUser, logInUser } from '../models/users';
+import { addUser, editUser, logInUser } from '../models/users';
 import { validateUserRegInput, emailHasMxRecord, getUserAuthToken, validateLoginInput } from '../utils/utils';
 import bcrypt from 'bcrypt';
 var debug = require('debug')('ecopal:server');
@@ -77,6 +77,25 @@ export async function logIn(req: Request, res: Response) {
 }
 
 
-// export async function edit (req: Request, res: Response){
+//get page passing id to updateuser page for put method.
+export async function updateUser (req: Request, res: Response){
+    const id: number = Number(req.params.id);
+    res.render('updateUser', {id});
+}
 
-// }
+//update
+export async function update (req: Request, res: Response){
+    if(!req.body){
+        const message = 'No data provided'
+        return res.status(400).render('error', {error: message});
+    }
+    const result = await editUser(req.params.id, req.body);
+   if(result.error){
+       return res.status(404).render('error', {error: result.error});
+   }
+   console.log("Bug"+req.body);
+   console.log("Bug2"+result.value);
+   return res.status(200).render('index',{page: 'login', message: result.value});
+//    res.status(200).redirect('/users/getallorders'); --use when page is ready.
+
+}
