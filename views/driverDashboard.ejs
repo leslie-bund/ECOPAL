@@ -2,7 +2,7 @@
 <html>
   <%- include('partials/head.ejs') %> 
   <body>
-    <%- include('partials/nav.ejs') %> 
+    <%- include('partials/dashboard/driverNav.ejs') %> 
     <main>
       <span class="alert" id="alert">
         <span class="alert-close" data-toggle="alert">X</span>
@@ -12,10 +12,9 @@
           <% } %>
         </p>
       </span>
-      <%- include('home.ejs') %>
+      <div>Driver dashboard</div>
+      <%- include('driverProfile.ejs') %>
       <%- include('service.ejs') %> 
-      <%- include('login.ejs') %>
-      <%- include('signup.ejs') %>
     </main>
 
     <script>

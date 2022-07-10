@@ -74,16 +74,29 @@ requestAnimationFrame(() => {
 })
 
 // Set
-const switcher = document.querySelectorAll('.switch');
-switcher.forEach(node => {
-    node.addEventListener('click', (e) => {
-      document.querySelectorAll('main > div').forEach(node => {
-          if(node.id === e.target.dataset.toggle) {
-            node.style.display = 'block'
-          } else {
-            node.style.display = 'none'
-          }
-        }
-      );
+function setToggle(toggler,toggledSelector)  {
+    const switcher = document.querySelectorAll(toggler);
+    return switcher.forEach(node => {
+        node.addEventListener('click', (e) => {
+            // eval(e.target.dataset?.execute);
+            document.querySelectorAll(toggledSelector).forEach(node => {
+                if(node.id === e.target.dataset.toggle) {
+                    node.style.display = 'block'
+                } else {
+                    node.style.display = 'none'
+                }
+                }
+            );
+        })
     })
-})
+}
+
+
+setToggle('.switch-1','.align-center > div');
+setToggle('.switch','main > div');
+
+// function generateOrders() {
+//     console.log('Yes we can')
+//     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+//     const day = new Date()
+// }

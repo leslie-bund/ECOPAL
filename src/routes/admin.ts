@@ -10,8 +10,13 @@ router.post('/login',logIn);
 router.use(verifyAdmin)
 
 router.get('/alldrivers', function(req, res, next) {
-    return res.status(200).render('index', { page: 'home', message: 'Successful logged in Admin' });
 
+    // res.locals.user holds objet of admin's details. Have to strigify and parse to retrieve the data from bson
+    return res.status(200).render('adminDashboard', { 
+        page: 'profile', 
+        message: `Successful logged in Admin \n ${res.locals.user.companyName}`, 
+        user: res.locals.user
+    });
 })
 
 router.put('/updateDriver/:id', function(req, res, next) {

@@ -82,3 +82,30 @@ interface Login {
     emailAddress: string
     password: string
   }
+
+interface order {
+    user: {
+        fullName: string,
+        email: string
+    },
+    addressOfBin: string,
+    zipCode: string,
+    trips: {
+        driverConfirm: boolean,
+        userConfirm: boolean,
+        date: Date
+    }[]
+}
+
+interface orderInput {
+    fullname: string,
+    binAddress: string,
+    city: string,
+    zipCode: string,
+    state: string,
+    cardNum: string,
+    expMonth: string,
+    expYear: string,
+    cvc: string,
+    price: string
+}

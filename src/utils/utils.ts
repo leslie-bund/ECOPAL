@@ -1,4 +1,4 @@
-import Joi from 'joi'
+import Joi, { number } from 'joi'
 import bcrypt from 'bcrypt'
 import dns from 'dns/promises';
 import jwt from 'jsonwebtoken';
@@ -33,6 +33,23 @@ export async function validateUserRegInput(user: UserReg) {
     
 }
 
+export async function validateUserPayInput(user: orderInput) {
+    const year = new Date().getFullYear() % 100;
+    const schema = Joi.object({
+        fullName: Joi.string().required(),
+        binAddress: Joi.string().required(),
+        city: Joi.string(),
+        zipCode: Joi.string(),
+        state: Joi.string(),
+        cardNum: Joi.string().max(16).min(14).required(),
+        expMonth: Joi.number().min(1).max(12),
+        expYear: Joi.number().min(year).max(year + 5),
+        cvc: Joi.number().min(0).max(999),
+        price: Joi.number()
+    });
+    return schema.validate(user);
+}
+
 export async function validateDriverRegInput(user: DriverReg) {
     //define a schema
     const schema = Joi.object({
@@ -55,6 +72,8 @@ export async function validateDriverRegInput(user: DriverReg) {
     return schema.validate(user)
     
 }
+
+// export async function validateOrderInput(){}
 
 export async function validateAdminRegInput(user: AdminReg) {
     //define a schema
@@ -97,11 +116,8 @@ export async function validateLoginInput(user: Login) {
 
 //logout
 export const logout =( async function(req: Request, res: Response, next: NextFunction){
-    res.cookie('token', '')
-    req.cookies.token = ''
-    res.cookie('user', '')
-    req.cookies.user = ''
-    // res.cookie(req.cookies.token, '') 
+    res.clearCookie('authorization');
+    req.cookies = '';
     res.status(200).redirect('/');
 })
 
@@ -118,7 +134,6 @@ const secretKey = process.env.JWT_SECRET_KEY;
 
 export function getUserAuthToken(user: user) {
     const { password, ...authUser } = user;
-    debug('Secret key: ', secretKey);
     if (secretKey) {
         return jwt.sign({ ...authUser, time: Date.now() }, secretKey, { expiresIn: 300 }) 
     }
@@ -126,13 +141,12 @@ export function getUserAuthToken(user: user) {
 
 export async function verifyUser(req: Request, res: Response, next: NextFunction) {
     const token = req.cookies.authorization;
-
     try {
         if(secretKey) {
             const payload = jwt.verify(token, secretKey);
-            debug('Payload: ',payload);
             const confirmUser = await UserData.findOne(JSON.parse(JSON.stringify(payload))).exec();
             if(confirmUser) {
+                res.locals.user = confirmUser;
                 next();
             } else {
                 return res.status(400).render('index', { page: 'login' , message: 'Please login with valid details' });
@@ -140,7 +154,8 @@ export async function verifyUser(req: Request, res: Response, next: NextFunction
         }
     } catch (error) {
         // debug(error);
-        res.end();
+        res.locals.message = 'Please Login again'
+        res.redirect(401, '/');
     }
 }
 
@@ -152,6 +167,7 @@ export async function verifyDriver(req: Request, res: Response, next: NextFuncti
             const payload = jwt.verify(token, secretKey);
             const confirmUser = await DriverData.findOne(JSON.parse(JSON.stringify(payload))).exec();
             if(confirmUser) {
+                res.locals.user = confirmUser;
                 next();
             } else {
                 return res.status(400).render('index', { page: 'login' , message: 'Please login with valid details' });
@@ -159,7 +175,8 @@ export async function verifyDriver(req: Request, res: Response, next: NextFuncti
         }
     } catch (error) {
         // debug(error);
-        res.end();
+        res.locals.message = 'Please Login again'
+        res.redirect(401, '/');
     }
 }
 
@@ -172,6 +189,7 @@ export async function verifyAdmin(req: Request, res: Response, next: NextFunctio
             const payload = jwt.verify(token, secretKey);
             const confirmUser = await AdminData.findOne(JSON.parse(JSON.stringify(payload))).exec();
             if(confirmUser) {
+                res.locals.user = confirmUser;
                 next();
             } else {
                 return res.status(400).render('index', { page: 'login' , message: 'Please login with valid details' });
@@ -179,6 +197,7 @@ export async function verifyAdmin(req: Request, res: Response, next: NextFunctio
         }
     } catch (error) {
         // debug(error);
-        res.end();
+        res.locals.message = 'Please Login again'
+        res.redirect(401, '/');
     }
 }

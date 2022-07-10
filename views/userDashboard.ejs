@@ -2,7 +2,7 @@
 <html>
   <%- include('partials/head.ejs') %> 
   <body>
-    <%- include('partials/nav.ejs') %> 
+    <%- include('partials/dashboard/userNav.ejs') %> 
     <main>
       <span class="alert" id="alert">
         <span class="alert-close" data-toggle="alert">X</span>
@@ -12,18 +12,15 @@
           <% } %>
         </p>
       </span>
-      <%- include('home.ejs') %>
-      <%- include('service.ejs') %> 
-      <%- include('login.ejs') %>
-      <%- include('signup.ejs') %>
+      <%- include('userProfile.ejs') %>
+      <%- include('pay.ejs') %> 
     </main>
 
     <script>
         const pageElements = document.querySelectorAll('main > div');
         const main = document.querySelector('main');
-        // console.log('List of page elements')
+        
         pageElements.forEach((node, index) => {
-          // console.log(`Element ${index}`,node.id)
           if (node.id !== '<%= page %>') {
             node.style.display = 'none'
           }

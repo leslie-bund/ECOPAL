@@ -20,6 +20,7 @@ import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import driversRouter from './routes/drivers';
 import adminRouter from './routes/admin';
+import { logout } from './utils/utils';
 
 const app = express();
 
@@ -38,6 +39,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/drivers', driversRouter);
 app.use('/admin', adminRouter);
+
+app.get('/logout', logout);
 
 // catch 404 and forward to error handler
 app.use(function(req: Request, res: Response, next:NextFunction) {

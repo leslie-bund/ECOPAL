@@ -38,14 +38,12 @@ export async function createDriver(req: Request, res: Response) {
     const driverData = await addDriver(user);
     if(!driverData.error) {
         // Set user's cookies here before redirecting
-        const token = getUserAuthToken(JSON.parse(JSON.stringify(driverData)));
+        const token = getUserAuthToken(JSON.parse(JSON.stringify(driverData.value)));
 
         res.cookie('authorization', `${token}`);
-        // Redirect the user to the User dashboard route
         
-        // return res.status(200).redirect('/drivers/allorders'); ---use when page is available
+        // Redirect the user to the User dashboard route
         res.redirect('/drivers/allorders');
-        // return res.status(200).render('index', { page: 'home', message: 'Successful added driver' })
     }
  
     if(driverData.error){
@@ -64,7 +62,7 @@ export async function logIn(req: Request, res: Response) {
       if (!error) {
         const dataObj = await logInDriver(user)
         if (!dataObj?.error && (await bcrypt.compare(user.password, dataObj?.value.password))) {
-            const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
+            const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj.value)));
             res.cookie('authorization', `${token}`);
 
             //Redirect to driver dashboard

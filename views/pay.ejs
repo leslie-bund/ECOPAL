@@ -1,0 +1,92 @@
+<div id="pay">
+
+    <form action="/users/pay" method="post">
+        <div class="switcher-display align-center">
+            <div id="pay-1" class="payment-form registration-form">
+                <button type="button" class="switch-1" data-toggle="pay-2" style="margin-bottom: 30px;">Next</button>
+                <div class="input-box">
+                    <label>Full name</label>
+                    <input type="text" name="fullName" value="<%= `${user.firstname} ${user.lastname}` %>">
+                </div>
+                <div class="input-box">
+                    <label>Address of bin</label>
+                    <input type="text" name="binAddress" value="<%= user.address %> ">
+                </div>
+                <div class="flex">
+                    <div class="input-box">
+                        <label>City</label>
+                        <input type="text" name="city">
+                    </div>
+                    <div class="input-box">
+                        <label>Postal Code</label>
+                        <input type="text" name="zipCode">
+                    </div>
+                    <div class="input-box">
+                        <label>State</label>
+                        <input type="text" name="state">
+                    </div>
+                </div>                
+            </div>
+            <div id="pay-2" class="payment-form registration-form" style="display: none;">
+                <button type="button" class="switch-1" data-toggle="pay-1" style="margin-bottom: 30px;">Previous</button>
+                <button type="button" class="switch-1" data-toggle="pay-3" style="margin-bottom: 30px;" data-execute="generateOrders()" id="trigger">Next</button>
+                <div class="flex">
+                    <div class="input-box">
+                        <label>Card number</label>
+                        <input type="number" name="cardNum">
+                    </div>
+                    <div class="input-box" style="margin: 0px 5px;">
+                        <label>MM</label>
+                        <input name="expMonth" type="number" size="2">
+                    </div>
+                    <div class="input-box">
+                        <label>YY</label>
+                        <input type="text" name="expYear" size="1">
+                    </div>
+                    <div class="input-box">
+                        <label>CVC</label>
+                        <input type="number" style="margin: 0px 5px;" name="cvc" size="3">
+                    </div>
+                </div>
+            </div>
+            <div id="pay-3" style="display: none;">
+                <button type="button" class="switch-1" data-toggle="pay-2" style="margin-bottom: 30px;">Previous</button>
+                <div class="flex" style="justify-content: space-between; margin: 2rem 0;">
+                    <div class="user-info">
+                        <span><strong><%= `${user.firstname} ${user.lastname}` %></strong></span><br><br>
+                        <span><%= user.emailAddress %></span><br><br>
+                        <span><%= user.phone %> </span><br><br>
+                        <span><%= `${user.address} ${user.zipcode}` %> </span>
+                    </div>
+                    <div class="price-calc">
+                        <p style="margin-bottom: 15px;">Please select a subscription plan</p>
+                        <input type="radio" name="price" id="month" value="2">
+                        <label class="radio-label" for="month">
+                            1 month
+                        </label>
+                        <input type="radio" name="price" id="half-year" value="12">
+                        <label class="radio-label" for="half-year">
+                            6 months
+                        </label>
+                        <input type="radio" name="price" id="year" value="24">
+                        <label class="radio-label" for="year">
+                            1 year
+                        </label>
+                        <div class="price-summary">
+                            <p><strong>Price Summary</strong> <span id="cash"></span></p>
+
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" class="btn" value="Pay">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // requestAnimationFrame(() => {
+    //    const multiple = document.querySelector("input[type='radio']:checked").value;
+    //    document.getElementById('cash').textContent = `NGN - ${+multiple * 2_000}`;
+    //})
+</script>

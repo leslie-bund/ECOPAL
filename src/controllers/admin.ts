@@ -61,12 +61,11 @@ export async function logIn(req: Request, res: Response) {
       if (!error) {
         const dataObj = await logInAdmin(user)
         if (!dataObj?.error && (await bcrypt.compare(user.password, dataObj?.value.password))) {
-            const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
+            const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj.value)));
             res.cookie('authorization', `${token}`);
 
             // redirect to Admin dashboard.
             res.redirect('/admin/alldrivers');
-            // return res.status(200).render('index', { page: 'home', value: 'Successful login admin' });
         } else {
           res.status(400);
           throw new Error('Invalid emailAddress or password');
@@ -75,4 +74,16 @@ export async function logIn(req: Request, res: Response) {
     } catch (err) {
         return res.render('index', { page: 'login' , message: err });
     }
-  }
+}
+
+export const zipCodeDays: {[k: string]: number} = {
+  "100": 1, //Mon
+  "200": 2, //Tue
+  "300": 3, //Wed
+  "400": 4, //Thur
+  "500": 5, //Fri
+  "600": 6, //Sat
+  "700": 1,
+  "800": 3,
+  "900": 4
+}
