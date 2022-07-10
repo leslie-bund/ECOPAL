@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <%- include('partials/head.ejs') %> 
+  <body>
+    <%- include('partials/dashboard/userNav.ejs') %> 
+    <main>
+      <span class="alert" id="alert">
+        <span class="alert-close" data-toggle="alert">X</span>
+        <p class="alert-text">
+          <% if (typeof message !== 'undefined') { %>
+            <b style="color: teal;"><%= message %></b>
+          <% } %>
+        </p>
+      </span>
+      <%- include('userProfile.ejs') %>
+      <%- include('pay.ejs') %> 
+    </main>
+
+    <script>
+        const pageElements = document.querySelectorAll('main > div');
+        const main = document.querySelector('main');
+        
+        pageElements.forEach((node, index) => {
+          if (node.id !== '<%= page %>') {
+            node.style.display = 'none'
+          }
+        });
+
+    </script>
+    <script src="/javascripts/render.js"></script>
+  </body>
+</html>

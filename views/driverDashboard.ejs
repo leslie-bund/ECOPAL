@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <%- include('partials/head.ejs') %> 
+  <body>
+    <%- include('partials/dashboard/driverNav.ejs') %> 
+    <main>
+      <span class="alert" id="alert">
+        <span class="alert-close" data-toggle="alert">X</span>
+        <p class="alert-text">
+          <% if (typeof message !== 'undefined') { %>
+            <b style="color: teal;"><%= message %></b>
+          <% } %>
+        </p>
+      </span>
+      <div>Driver dashboard</div>
+      <%- include('driverProfile.ejs') %>
+      <%- include('service.ejs') %> 
+    </main>
+
+    <script>
+        const pageElements = document.querySelectorAll('main > div');
+        const main = document.querySelector('main');
+        // console.log('List of page elements')
+        pageElements.forEach((node, index) => {
+          // console.log(`Element ${index}`,node.id)
+          if (node.id !== '<%= page %>') {
+            node.style.display = 'none'
+          }
+        });
+
+    </script>
+    <script src="/javascripts/render.js"></script>
+  </body>
+</html>
