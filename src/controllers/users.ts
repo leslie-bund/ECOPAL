@@ -75,3 +75,8 @@ export async function logIn(req: Request, res: Response) {
     return res.status(400).render('index', { page: 'login' , message: err });
   }
 }
+
+
+// export async function edit (req: Request, res: Response){
+
+// }

@@ -26,9 +26,6 @@ router.post('/post', function(req, res, next) {
 
 })
 
-router.put('/update', function(req, res, next) {
-
-})
 
 
 router.post('/pay', makeNewOrder)
