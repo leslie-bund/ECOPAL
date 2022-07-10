@@ -34,16 +34,16 @@ export async function createUser(req: Request, res: Response) {
 
     const userData = await addUser(user);
     if (userData.error) {
-        return res.status(200).render('index', { page: 'signup' , message: userData }); 
+        return res.status(200).render('index', { page: 'signup' , message: JSON.stringify(userData) }); 
     }
 
     if(!userData.error) {
         // Set user's cookies here before redirecting
-        const token = getUserAuthToken(JSON.parse(JSON.stringify(userData)));
+        const token = getUserAuthToken(JSON.parse(JSON.stringify(userData.value)));
 
         // Redirect the user to the User dashboard route
         res.cookie('authorization', `${token}`);
-
+        
         // return res.status(200).redirect('/users/getorders'); ---work with this when available!
         res.redirect('/users/getorders');
         // return res.status(200).render('index', { page: 'home' , message: 'Successful Signup' });
@@ -61,12 +61,11 @@ export async function logIn(req: Request, res: Response) {
     if (!error) {
       const dataObj = await logInUser(user)
       if (!dataObj?.error && (await bcrypt.compare(user.password, dataObj?.value.password))) {
-        const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj)));
+        const token = getUserAuthToken(JSON.parse(JSON.stringify(dataObj.value)));
         res.cookie('authorization', `${token}`);
         
         // Redirect to user dashboard --when dashboard is ready
         res.redirect('/users/getorders');
-        // return res.status(200).render('index', { page: 'home', message: 'Successful login' })
       } else {
         res.status(400)
         throw new Error('Invalid emailAddress or password')
