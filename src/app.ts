@@ -5,12 +5,13 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import methodOverride from 'method-override';
 var debug = require('debug')('ecopal:server');
 
 //--Defining the database.
 dotenv.config();
 mongoose.connect(<string>process.env.MONGO_URL).then(()=>{
-  debug('connected to mongoDb');
+  console.log('connected to mongoDb');
 }).catch(err => {
   console.error('could not connect to mongoDb\n', err)
 })
@@ -33,6 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(methodOverride('_method'));
 
 //-- route to follow when called;
 app.use('/', indexRouter);

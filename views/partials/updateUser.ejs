@@ -1,0 +1,30 @@
+<div id="userUpdate" class="registration-form" style="display: none;">
+    <h5>UPDATE DETAILS</h5>
+    <form  method="post" action="/users/update_user?_method=PUT" enctype="application/x-www-form-urlencoded">
+        <div>
+            <label for="">firstname</label>
+            <input type="text" name="firstname" value="<%= user.firstname %>" disabled>
+        </div>
+        <div>
+            <label for="">lastname</label>
+            <input type="text" name="lastname" value="<%= user.lastname %>" disabled>
+        </div>
+        <div>
+            <label for="">EmailAddress</label>
+            <input type="email" name="emailAddress" value="<%= user.emailAddress %>" disabled>
+        </div>
+        <div>
+            <label for="">Address</label>
+            <input type="text" name="address" value="<%= user.address %>">
+        </div>
+        <div>
+            <label for="">Zipcode</label>
+            <input type="text" name="zipcode" value="<%= user.zipcode %>">
+        </div>
+        <div>
+            <label for="">Phone</label>
+            <input type="text" name="phone" value="<%= user.phone %>">
+        </div>
+        <button type="submit" class="btn">Update</button>
+    </form>
+</div>

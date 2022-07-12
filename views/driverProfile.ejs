@@ -1,6 +1,6 @@
 <div id="profile">
     <div style="padding-top: 50px; display: flex; justify-content:center;">
-        <p style="width: 10rem; padding: 2rem; background-color: grey; font-size: 3rem; text-align: center; color:rgba(105, 105, 105, 0.601);">IMG</p>
+        <p style="width: 10rem; height: 10rem; padding: 2rem; background-color: grey; font-size: 3rem; text-align: center; color:rgba(105, 105, 105, 0.601);">IMG</p>
         <div style="margin-left: 30px;">
             <p>
                 <span class="text-muted"><strong><%= `${user.firstname} ${user.lastname}` %></strong></span><br>
@@ -12,4 +12,6 @@
             </p>
         </div>
     </div>
+    <center><button class="switch-3" data-toggle="userUpdate" style="margin: 0.6rem auto;">Update profile</button></center>
+    <%- include('partials/updateDriver.ejs') %> 
 </div>

@@ -1,11 +1,16 @@
 import express, { Router, Response, Request } from 'express';
 import { verifyAdmin } from '../utils/utils'; 
-import { createAdmin, logIn } from '../controllers/admin';
+import { createAdmin, logIn, update } from '../controllers/admin';
 const router = Router();
 
 
 router.post('/register', createAdmin);
 router.post('/login',logIn);
+
+//update Admin info
+router.put('/update/:id', update );
+
+// router.get('/update/:id', updateUser);
 
 router.use(verifyAdmin)
 
