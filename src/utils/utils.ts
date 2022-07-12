@@ -172,6 +172,10 @@ export async function verifyDriver(req: Request, res: Response, next: NextFuncti
             const confirmUser = await DriverData.findOne(JSON.parse(JSON.stringify(payload))).exec();
             if(confirmUser) {
                 res.locals.user = confirmUser;
+                if(req.cookies.msg) {
+                    res.locals.message = req.cookies.msg;
+                    res.clearCookie('msg');
+                }
                 next();
             } else {
                 return res.status(400).render('index', { page: 'login' , message: 'Please login with valid details' });
@@ -194,6 +198,10 @@ export async function verifyAdmin(req: Request, res: Response, next: NextFunctio
             const confirmUser = await AdminData.findOne(JSON.parse(JSON.stringify(payload))).exec();
             if(confirmUser) {
                 res.locals.user = confirmUser;
+                if(req.cookies.msg) {
+                    res.locals.message = req.cookies.msg;
+                    res.clearCookie('msg');
+                }
                 next();
             } else {
                 return res.status(400).render('index', { page: 'login' , message: 'Please login with valid details' });

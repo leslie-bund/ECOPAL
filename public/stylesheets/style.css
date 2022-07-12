@@ -60,10 +60,10 @@ nav a {
 .text-muted {
   display: inline-block;
   color: darkslategrey;
-  margin-bottom: 20px;
+  margin-bottom: 0.5rem;
   font-weight: 500;
-  text-shadow: 0px 0px 5px aquamarine;
-  font-size: 1.2rem;
+  text-shadow: 0px 0px 15px cornsilk;
+  font-size: 0.9rem;
 }
 
 nav a:hover {

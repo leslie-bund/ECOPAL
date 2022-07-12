@@ -8,7 +8,14 @@
                 <span class="text-muted"><%= user.phone %> </span><br>
                 <span class="text-muted"><%= user.licenseNumber %> </span><br>
                 <span class="text-muted"><%= `${user.address} ${user.zipcode}` %> </span><hr>
-                <span class="text-muted"><%= user.status %> </span>
+                <% if (user.status.toLowerCase() === 'suspended') { %>
+                    <span style="color: red; font-weight:700; font-size: 0.8rem;"><%= user.status %></span>
+                <% } else if (user.status.toLowerCase() === 'active') { %>
+                    <span style="color: green; font-weight:700; font-size: 0.8rem;"><%= user.status %></span>
+                <% } else { %>
+                    <span style="color: gray; font-weight:700; font-size: 0.8rem;"><%= user.status %></span>
+                <% } %>
+                 
             </p>
         </div>
     </div>
