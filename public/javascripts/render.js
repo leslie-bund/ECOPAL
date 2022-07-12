@@ -81,6 +81,9 @@ function setToggle(toggler,toggledSelector)  {
             // eval(e.target.dataset?.execute);
             document.querySelectorAll(toggledSelector).forEach(node => {
                 if(node.id === e.target.dataset.toggle) {
+                    if(e.target.classList.value === 'switch-3') {
+                        e.target.style.display = 'none';
+                    }
                     node.style.display = 'block'
                 } else {
                     node.style.display = 'none'
@@ -94,6 +97,7 @@ function setToggle(toggler,toggledSelector)  {
 
 setToggle('.switch-1','.align-center > div');
 setToggle('.switch','main > div');
+setToggle('.switch-3', '#userUpdate');
 
 // function generateOrders() {
 //     console.log('Yes we can')

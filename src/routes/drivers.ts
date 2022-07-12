@@ -6,12 +6,7 @@ const router = Router();
 router.post('/register', createDriver);
 router.post('/login',logIn);
 
-//update driver info
-router.put('/update/:id', update);
-
-// router.get('/update/:id', updateDriver);
-
-
+//verify driver
 router.use(verifyDriver);
 
 router.get('/allorders', function(req, res, next) {
@@ -19,22 +14,21 @@ router.get('/allorders', function(req, res, next) {
     // res.locals.user holds objet of driver's details. Have to strigify and parse to retrieve the data from bson
     return res.status(200).render('driverDashboard', { 
         page: 'profile', 
-        message: `Successful logged in driver \n ${res.locals.user.firstname}`, 
+        message: res.locals.message || `Successful logged in driver \n ${res.locals.user.firstname}`, 
         user: res.locals.user
     });
 
 })
 
-// router.post('/register', function(req, res, next) {
-
-// })
-
-// router.post('/login', function(req, res, next) {
-
-// })
+//update driver info
+router.put('/update_driver', update);
 
 router.put('/updateOrder', function(req, res, next) {
 
+     // For confirming the orders - from driver's side
+    //  OrderData.updateOne({ _id: 'orderID'}, {
+    //   $set : { 'trips.indexOfOrder.driverconfirm' : true }
+    // })
 })
 
 // Add driver routes after login

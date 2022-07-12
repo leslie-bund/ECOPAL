@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { hashPassword } from '../utils/utils'
+import { OrderData } from './orders'
 var debug = require('debug')('ecopal:server')
 
 const userRegSchema = new mongoose.Schema({
@@ -56,7 +57,6 @@ export async function editUser(id: string, user: user) {
       address: user.address,
       phone: user.phone,
       zipcode: user.zipcode,
-      password: user.password,
     });
     //save back to database and return result
     const data = await dataObj.save();
@@ -68,3 +68,16 @@ export async function editUser(id: string, user: user) {
     return result;
   }
 }
+
+export async function getOrders(mail:string) {
+  try{
+    //find order of a particular user;
+    const dataObj = await OrderData.find({'user.email': mail}, { trips: true }).exec();
+    return dataObj;
+
+  }catch(err){
+    debug('err'+err);
+    return
+  }
+}
+

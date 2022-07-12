@@ -147,6 +147,10 @@ export async function verifyUser(req: Request, res: Response, next: NextFunction
             const confirmUser = await UserData.findOne(JSON.parse(JSON.stringify(payload))).exec();
             if(confirmUser) {
                 res.locals.user = confirmUser;
+                if(req.cookies.msg) {
+                    res.locals.message = req.cookies.msg;
+                    res.clearCookie('msg');
+                }
                 next();
             } else {
                 return res.status(400).render('index', { page: 'login' , message: 'Please login with valid details' });

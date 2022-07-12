@@ -123,26 +123,12 @@ nav {
   padding: 5px 10px;
   font-weight: 500;
 }
-/* forms */
-/* 
-.registration-form {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px; 
-} */
 
 .registration-form h5 {
   font-size: 1.2rem;
   text-align: center;
   margin: 10px auto;
 }
-
-/* .registration-form label {
-  font-size: 10px;
-  margin: 12px 0;
-} */
 
 .registration-form input {
   /* font-size: 15px; */
@@ -193,10 +179,6 @@ h5 {
   padding: 6rem;
 }
 
-/* input {
-  width: 170px;
-} */
-
 label {
   font-size: 1rem;
   color: silver;
@@ -225,7 +207,6 @@ label {
   justify-content: center;
   align-items: center;
 }
-
 
 .switcher {
   max-width: 55rem;
@@ -268,6 +249,15 @@ label {
 }
 
 .switch-1 {
+  border: unset;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.5rem;
+  background-color: teal;
+  color: whitesmoke;
+  font-weight: 900;
+}
+
+.switch-3 {
   border: unset;
   padding: 1rem 1.5rem;
   margin-bottom: 0.5rem;
@@ -340,7 +330,10 @@ input[type='radio']:checked + label {
   font-size: 0.7rem;
 }
 
-
+#userUpdate {
+  max-width: 500px;
+  margin: 2rem auto;
+}
 
 
 

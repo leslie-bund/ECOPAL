@@ -13,7 +13,7 @@ const driverRegSchema = new mongoose.Schema({
   licenseNumber: String,
   password: String,
   role: { type: String, default: 'driver' },
-  status: { type: String, default: 'suspended' },
+  status: { type: String, default: 'Pending' },
 })
 
 export const DriverData = mongoose.model('DriverData', driverRegSchema)
@@ -58,8 +58,7 @@ export async function editDriver(id: string, user: user) {
     dataObj.set({
       address: user.address,
       phone: user.phone,
-      zipcode: user.zipcode,
-      password: user.password,
+      zipcode: user.zipcode
     });
     //save back to database and return result
     const data = await dataObj.save();

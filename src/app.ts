@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import methodOverride from 'method-override';
 var debug = require('debug')('ecopal:server');
 
 //--Defining the database.
@@ -33,6 +34,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(methodOverride('_method'));
 
 //-- route to follow when called;
 app.use('/', indexRouter);
