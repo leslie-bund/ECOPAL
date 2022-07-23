@@ -1,0 +1,41 @@
+<div id="future">
+    <% if (drivers.pending.length > 0) { %>
+        <% drivers.pending.forEach(element => { %>
+            <div style="background-color: whitesmoke; border-radius: 15px; padding: 2rem 1rem; margin-bottom: 1rem;">
+                <div class="flex" style="justify-content: space-between;">
+                    <p style="color: teal;">
+                        <span><%= element.firstname + " " + element.lastname %></span><br>
+                        <small><i><%= element.emailAddress %> </i></small><br>
+                        <small><i><%= element.phone %> </i></small><br>
+                        <small><i><%= element.licenseNumber %> </i></small><br>
+                        <small><i><%= element.address %> </i></small><br>
+                        <small>Current Status: 
+                            <i style="color: blue; font-weight: 600;"><%= element.status %></i> 
+                        </small>
+                    </p>
+                    <form class="flex" action="/admin/updateDriver/<%= element._id %>?_method=PUT" method="post">
+                        <input type="radio" name="status" id="appr1<%= element._id %>" value="approved">
+                        <label class="radio-label" for="appr1<%= element._id %>">
+                            <small style="font-size: 0.8rem;">Approve driver</small>
+                        </label>
+                        <input type="radio" name="status" id="appr2<%= element._id %>" value="suspended">
+                        <label class="radio-label" for="appr2<%= element._id %>">
+                            <small style="font-size: 0.8rem;">Suspend driver</small>
+                        </label>
+                        <input type="text" list="list" required placeholder="Change zipcode..." name="zipcode" style="margin: 0 0.5rem; padding: 1rem 0.5rem; color: gray; border: unset;">
+                        <datalist id="list">
+                            <% zips.forEach(element => { %>
+                             <option value="<%= element %>"><%= element %></option>
+                            <% }) %>
+                        </datalist>
+                        <input type="submit" class="switch-1" value="Update">
+                    </form>
+                </div>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <h1 style="color: gray; text-align:center">
+            No new drivers
+        </h1>
+    <% } %> 
+</div>

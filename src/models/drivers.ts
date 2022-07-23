@@ -1,6 +1,7 @@
 import { string } from 'joi'
 import mongoose from 'mongoose'
 import { hashPassword } from '../utils/utils'
+import { OrderData } from './orders'
 var debug = require('debug')('ecopal:server')
 
 const driverRegSchema = new mongoose.Schema({
@@ -56,9 +57,10 @@ export async function editDriver(id: string, user: user) {
     }
     //set it new values
     dataObj.set({
-      address: user.address,
-      phone: user.phone,
-      zipcode: user.zipcode
+      address: user.address || dataObj.address,
+      phone: user.phone || dataObj.phone,
+      zipcode: user.zipcode || dataObj.zipcode,
+      status: user.status || dataObj.status
     });
     //save back to database and return result
     const data = await dataObj.save();
@@ -69,4 +71,26 @@ export async function editDriver(id: string, user: user) {
     const result = { value: null, error: err }
     return result;
   }
+}
+// TODO
+export async function orderForDriver(serviceZip: string) {
+  // prepare order for each driver
+  return await OrderData.find({ zipCode: serviceZip }, { trips: 1, addressOfBin: 1 }).exec(); 
+}
+
+export async function alldrivers(){
+  const driveArr = await DriverData.find({}, { password: 0 }).exec();
+  
+  const driveObj: {[k: string]: driverPayload[]} = {
+    "pending": [],
+    "suspended": [],
+    "approved": []
+  }
+
+  for(let i of JSON.parse(JSON.stringify(driveArr))) {
+    driveObj[i.status.toLocaleLowerCase()].push(i);
+  }
+
+  return driveObj;
+
 }

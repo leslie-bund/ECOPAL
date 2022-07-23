@@ -1,7 +1,7 @@
 import express, { Router, Response, Request } from 'express';
 import { verifyUser } from '../utils/utils';
 import { createUser, logIn, update, orders  } from '../controllers/users';
-import { makeNewOrder } from '../controllers/orders';
+import { makeNewOrder, rescheduleOrder, confirmOrder } from '../controllers/orders';
 var debug = require('debug')('ecopal:server');
 const router = Router();
 
@@ -10,31 +10,16 @@ router.post('/register', createUser);
 router.post('/login', logIn);
 
 
-router.use(verifyUser);
-router.get('/getorders', orders)
+// router.use(verifyUser);
+router.get('/getorders', verifyUser, orders)
 
-router.put('/update_user', update);
+router.put('/update_user', verifyUser, update);
 
+router.post('/pay', verifyUser, makeNewOrder)
 
+router.put('/orders/confirm/:id', verifyUser, confirmOrder)
 
-router.post('/pay', makeNewOrder)
-
-router.put('/orders/confirm', function(req, res, next) {
-    
-    // For updating the driver confirmed orders - from user's side
-    // OrderData.updateOne({ _id: 'orderID'}, {
-    //   $set : { 'trips.indexOfOrder.userconfirm' : true }
-    // })
-
-})
-
-router.put('/orders/:id', function(req, res, next) {
-    
-    // For rescheduling
-    // OrderData.updateOne({ _id: 'orderID'}, {
-    //   $set : { 'trips.indexOfOrder.date' : 'new Date(supplied from the form)' }
-    // })
-})
+router.put('/orders/:id', verifyUser, rescheduleOrder)
 
 
 

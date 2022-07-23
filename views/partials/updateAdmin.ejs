@@ -1,0 +1,26 @@
+<div id="userUpdate" class="registration-form" style="display: none;">
+    <h5>UPDATE DETAILS</h5>
+    <form  method="post" action="/admin/update/<%= user._id %>?_method=PUT" enctype="application/x-www-form-urlencoded">
+        <div>
+            <label for="">Company Name</label>
+            <input type="text" name="companyName" value="<%= user.companyName %>" disabled>
+        </div>
+        <div>
+            <label for="">Email address</label>
+            <input type="text" name="emailAddress" value="<%= user.emailAddress %>" disabled>
+        </div>
+        <div>
+            <label for="">Current password</label>
+            <input type="password" name="currentPassword">
+        </div>
+        <div>
+            <label for="">New password</label>
+            <input type="password" name="password">
+        </div>
+        <div>
+            <label for="">Confirm New password</label>
+            <input type="password" name="confirmPassword">
+        </div>
+        <button type="submit" class="btn">Update</button>
+    </form>
+</div>

@@ -1,7 +1,10 @@
 import express, { Response, Request } from 'express';
-import { addDriver, editDriver, logInDriver } from '../models/drivers';
+import { addDriver, editDriver, logInDriver, orderForDriver } from '../models/drivers';
+import { zipCodeDays } from './admin';
 import bcrypt from 'bcrypt';
 import { validateDriverRegInput, emailHasMxRecord, getUserAuthToken, validateLoginInput } from '../utils/utils';
+import { any } from 'joi';
+import { OrderData } from '../models/orders';
 var debug = require('debug')('ecopal:server');
 
 
@@ -93,9 +96,47 @@ export async function update (req: Request, res: Response){
   res.cookie('authorization', `${token}`);
   res.cookie('msg','Successfully updated');
   res.redirect('/drivers/allorders');
-  //  console.log("Bug"+req.body);
-  //  console.log("Bug2"+result.value);
-  //  return res.status(200).render('index',{page: 'login', message: result.value});
-  // //    res.status(200).redirect('/users/getallorders'); --use when page is ready.
 
+}
+// TODO
+export async function getDriverOrders(req: Request, res: Response) {
+  
+    const data = await orderForDriver(res.locals.user.zipcode);
+    let orders = JSON.parse(JSON.stringify(data)).map((element: Pick<order, '_id' | 'trips' | 'addressOfBin'>)=>{
+      let foundIndex: number | null = null;
+      const found = element.trips.find((trip, index: number)=> {
+        foundIndex = index;
+        return !trip.driverConfirm && new Date(trip.date).toDateString() === new Date().toDateString() 
+      })
+      if(found) {
+        return {
+          orderId: element._id,
+          address: element.addressOfBin,
+          trip: found,
+          tripIndex: foundIndex,
+        }
+      }
+    }).filter((element: driverOrder) => element)
+
+  return res.status(200).render('driverDashboard', { 
+      page: 'orders', 
+      message: res.locals.user.message || `Successful logged in driver \n ${res.locals.user.firstname}`, 
+      user: res.locals.user,
+      orders
+  });
+}
+
+export async function driverConfirmOrder(req: Request, res: Response) {
+  //  For confirming the orders - from driver's side
+   const updated = await OrderData.updateOne({ _id: req.params.id}, {
+    $set : { [`trips.${req.body.index}.driverConfirm`] : true }
+  })
+
+  
+  if(updated.modifiedCount > 0) {
+    res.cookie('msg', 'Confirmed');
+    return res.redirect('/drivers/allorders');
+  }
+  res.cookie('msg', 'Unsuccessful');
+  return res.redirect('/drivers/allorders');
 }

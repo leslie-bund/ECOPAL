@@ -89,11 +89,7 @@ export async function logIn(req: Request, res: Response) {
   }
 }
 
-//get page passing id to updateuser page for put method.
-// export async function updateUser (req: Request, res: Response){
-//     const id: number = Number(req.params.id);
-//     res.render('updateUser', {id});
-// }
+
 
 //update
 export async function update(req: Request, res: Response) {
@@ -113,15 +109,14 @@ export async function update(req: Request, res: Response) {
 }
 
 //orders
-export async function orders(req: Request, res: Response) {
-  const yee = await getOrders(res.locals.user.emailAddress);
-  // debug("bug1", yee);
-    // res.locals.user holds objet of admin's details. Have to strigify and parse to retrieve the data from bson
-    // debug('Actual Id: ', JSON.parse(JSON.stringify(res.locals.user))._id)
-    return res.status(200).render('userDashboard', { 
-        page: 'profile', 
-        message: res.locals.message || `Successful logged in user \n ${res.locals.user.firstname}`, 
-        user: res.locals.user 
-    })
+export async function orders(_req: Request, res: Response) {
+  const orderArr = await getOrders(res.locals.user.emailAddress);
+
+  return res.status(200).render('userDashboard', { 
+      page: 'orders', 
+      message: res.locals.message || `Successful logged in user \n ${res.locals.user.firstname}`, 
+      user: res.locals.user,
+      orders: orderArr
+  })
 
 }

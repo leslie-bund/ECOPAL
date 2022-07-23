@@ -50,6 +50,11 @@ export async function validateUserPayInput(user: orderInput) {
     return schema.validate(user);
 }
 
+export async function validateRescheduleDate(date: string) {
+    const schema = Joi.date().min(Date());
+    return schema.validate(date);
+}
+
 export async function validateDriverRegInput(user: DriverReg) {
     //define a schema
     const schema = Joi.object({
@@ -73,7 +78,6 @@ export async function validateDriverRegInput(user: DriverReg) {
     
 }
 
-// export async function validateOrderInput(){}
 
 export async function validateAdminRegInput(user: AdminReg) {
     //define a schema
@@ -135,7 +139,7 @@ const secretKey = process.env.JWT_SECRET_KEY;
 export function getUserAuthToken(user: user) {
     const { password, ...authUser } = user;
     if (secretKey) {
-        return jwt.sign({ ...authUser, time: Date.now() }, secretKey, { expiresIn: 300 }) 
+        return jwt.sign({ ...authUser, time: Date.now() }, secretKey, { expiresIn: 3000 }) 
     }
 }
 
@@ -159,7 +163,7 @@ export async function verifyUser(req: Request, res: Response, next: NextFunction
     } catch (error) {
         // debug(error);
         res.locals.message = 'Please Login again'
-        res.redirect(401, '/');
+        return res.redirect(401, '/');
     }
 }
 
@@ -184,7 +188,7 @@ export async function verifyDriver(req: Request, res: Response, next: NextFuncti
     } catch (error) {
         // debug(error);
         res.locals.message = 'Please Login again'
-        res.redirect(401, '/');
+        return res.redirect(401,'/');
     }
 }
 
@@ -210,6 +214,6 @@ export async function verifyAdmin(req: Request, res: Response, next: NextFunctio
     } catch (error) {
         // debug(error);
         res.locals.message = 'Please Login again'
-        res.redirect(401, '/');
+        return res.redirect(401, '/');
     }
 }

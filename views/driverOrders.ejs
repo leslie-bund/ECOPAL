@@ -1,0 +1,24 @@
+<div id="orders" style="margin: 2rem 1rem;">
+    <% if (orders.length > 0) { %>
+        <% orders.forEach(element => { %>
+            <div style="background-color: whitesmoke; border-radius: 15px; padding: 2rem 1rem; margin-bottom: 1rem;">
+                <div class="flex" style="justify-content: space-between;">
+                    <p style="color: teal;"><%= element.address %> </p>
+                    <p style="color: teal;"><%= new Date(element.trip.date) %> </p>
+                    <form class="flex" action="/drivers/updateOrder/<%= element.orderId %>?_method=PUT" method="post">
+                        <input type="text" name="index" value="<%= element.tripIndex %>" hidden>
+                        <input type="submit" class="switch-1" value="Confirm Pickup">
+                    </form>
+                </div>
+            </div>
+        <% }) %>
+    <% } else if (user.status.toLocaleLowerCase() !== 'approved') { %>
+        <h1 style="color: gray; text-align:center; margin-top: 3rem;">
+            Please wait, while we get your account approved
+        </h1>
+    <% } else { %>
+        <h1 style="color: gray; text-align:center; margin-top: 3rem;">
+            No scheduled pickups, for today
+        </h1>
+    <% } %> 
+</div>

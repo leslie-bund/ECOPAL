@@ -1,0 +1,19 @@
+<div id="confirm">
+    <% if (orders.confirm.length > 0) { %>
+        <% orders.confirm.forEach(element => { %>
+            <div style="background-color: whitesmoke; border-radius: 15px; padding: 2rem 1rem; margin-bottom: 1rem;">
+                <div class="flex" style="justify-content: space-between;">
+                    <p style="color: teal;"><%= new Date(element.date) %> </p>
+                    <form class="flex" action="/users/orders/confirm/<%= element.id %>?_method=PUT" method="post">
+                        <input type="text" name="index" value="<%= element._index %>" hidden>
+                        <input type="submit" class="switch-1" value="confirm">
+                    </form>
+                </div>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <h1 style="color: gray; text-align:center">
+            No scheduled pickups, made today
+        </h1>
+    <% } %> 
+</div>

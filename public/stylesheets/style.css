@@ -18,17 +18,21 @@ li, ul {
 header {
     background-color: whitesmoke;
     display: flex;
+    position: sticky;
     align-items: center;
+    top: 0;
+    z-index: 3000;
     /* justify-content: space-between; */
     padding: 1.5rem;
     color: teal;
 }
+
 .burger {
-  display: relative;
+  display: absolute;
   margin-right: 1rem;
   font-size: 1.2em;
   cursor: pointer;
-  z-index: 5;
+  z-index: 5007;
 }
 .burger span {
   display: block;
@@ -37,16 +41,16 @@ header {
   background: teal;
   margin-bottom: 0.3rem;
 }
+
 nav {
   background-color: whitesmoke;
-  padding: 80px 20px 20px 20px;
-  /* padding-top: 80px; */
-  height: 100%;
+  padding: 1.3rem;
+  position: fixed;
   width: 200px;
-  position: absolute;
-  top: 0;
-  z-index: 2;
+  top: 70px;
+  bottom: 0;
   left: -200px;
+  z-index: 3000;
 }
 nav a {
   color: teal;
@@ -71,7 +75,9 @@ nav a:hover {
 }
 /* open nav */
 nav.open {
+  /* position: sticky; */
   left: 0;
+  /* z-index: 3000; */
 }
 
 .burger.open span:nth-child(1) {
@@ -81,11 +87,10 @@ nav.open {
   transform: rotate(-45deg) translateY(-10px);
 }
 .burger.open span:nth-child(2) {
-  /* transform: rotate(45deg); */
   opacity: 0;
   width: 0;
 }
-/* transitions */
+
 nav {
   transition: left ease-in 0.3s;
 }
@@ -131,7 +136,6 @@ nav {
 }
 
 .registration-form input {
-  /* font-size: 15px; */
   border: unset;
   margin-bottom: 1rem;
   padding: 7px 10px;
@@ -160,6 +164,7 @@ nav {
   /* font-size: 10px; */
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
 }
 
 h5 {
@@ -315,12 +320,26 @@ label {
   margin: 0 0.2rem;
 }
 
-input[type='radio'] {
+input[type='radio'], input[type='checkbox'] {
   visibility: hidden;
 }
 
 input[type='radio']:checked + label {
   box-shadow: 5px 5px 20px lawngreen;
+}
+
+
+input[type='checkbox']:checked + label {
+  box-shadow: 0px 0px 4px lawngreen;
+}
+
+.check-label {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: gray;
+  padding: 5px;
+  border-radius: 2px;
+  margin: 0 0.5rem;
 }
 
 .price-summary {

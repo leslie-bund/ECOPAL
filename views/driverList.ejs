@@ -1,0 +1,18 @@
+<div id="drivers">
+    <div class="switcher login-switch">
+        <button data-toggle="future">
+            Pending
+        </button>
+        <button data-toggle="confirm">
+            Approved
+        </button>
+        <button data-toggle="history">
+            Suspended
+        </button>
+    </div>
+    <div class="switcher-display login-disp">
+        <%- include('partials/adminDrivers/pending.ejs') %>  
+        <%- include('partials/adminDrivers/approved.ejs') %> 
+        <%- include('partials/adminDrivers/suspended.ejs') %>  
+    </div>
+</div>

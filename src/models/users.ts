@@ -61,8 +61,7 @@ export async function editUser(id: string, user: user) {
     //save back to database and return result
     const data = await dataObj.save();
     const result = { value: data, error: null }
-    return result
-
+    return result;
   } catch (err) {
     const result = { value: null, error: err }
     return result;
@@ -73,10 +72,43 @@ export async function getOrders(mail:string) {
   try{
     //find order of a particular user;
     const dataObj = await OrderData.find({'user.email': mail}, { trips: true }).exec();
-    return dataObj;
+    const userOrders: orderCollection = {
+      history: [],
+      confirm: [],
+      future: []
+    }
+  
+    for(let orderElement of dataObj) {
+      orderElement.trips.forEach((trip, _index) => {
+        const { _id, ...tripData } = JSON.parse(JSON.stringify(trip))
+        if(trip.driverConfirm && trip.userConfirm){
+            userOrders.history.push(tripData);
+        }
+        if(trip.driverConfirm && !trip.userConfirm){
+          userOrders.confirm.push(
+            {
+              id: orderElement._id.toString(),
+              _index,
+              ...tripData
+            }
+          );
+        }
+        if(!trip.driverConfirm && !trip.userConfirm){
+          userOrders.future.push(
+            {
+              id: orderElement._id.toString(),
+              _index,
+              ...tripData
+            }
+          );
+        }
+      })
+    }
+
+    return userOrders;
 
   }catch(err){
-    debug('err'+err);
+    
     return
   }
 }

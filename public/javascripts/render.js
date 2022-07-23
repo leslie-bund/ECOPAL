@@ -94,13 +94,15 @@ function setToggle(toggler,toggledSelector)  {
     })
 }
 
+const burger = document.querySelector('.burger')
+const nav = document.querySelector('nav')
+        burger.addEventListener('click', () => {
+            nav.classList.toggle('open')
+            burger.classList.toggle('open')
+        })
+
 
 setToggle('.switch-1','.align-center > div');
 setToggle('.switch','main > div');
 setToggle('.switch-3', '#userUpdate');
 
-// function generateOrders() {
-//     console.log('Yes we can')
-//     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-//     const day = new Date()
-// }

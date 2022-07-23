@@ -14,20 +14,17 @@
       </span>
       <div>Admin</div>
       <%- include('adminProfile.ejs') %>
-      <%- include('service.ejs') %> 
+      <%- include('driverList.ejs') %> 
     </main>
 
     <script>
         const pageElements = document.querySelectorAll('main > div');
         const main = document.querySelector('main');
-        // console.log('List of page elements')
         pageElements.forEach((node, index) => {
-          // console.log(`Element ${index}`,node.id)
           if (node.id !== '<%= page %>') {
             node.style.display = 'none'
           }
         });
-
     </script>
     <script src="/javascripts/render.js"></script>
   </body>

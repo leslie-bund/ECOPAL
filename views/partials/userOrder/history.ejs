@@ -1,0 +1,15 @@
+<div id="history">
+    <% if (orders.history.length > 0) { %>
+        <% orders.history.forEach(element => { %>
+            <div style="background-color: whitesmoke; border-radius: 15px; padding: 2rem 1rem; margin-bottom: 1rem;">
+                <div class="flex" style="justify-content: space-between;">
+                    <p style="color: teal;"><%= new Date(element.date) %> </p>
+                </div>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <h1 style="color: gray; text-align:center">
+            No completed pickups.
+        </h1>
+    <% } %> 
+</div>

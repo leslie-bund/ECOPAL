@@ -5,9 +5,12 @@ import {
   validateLoginInput,
   getUserAuthToken,
 } from '../utils/utils'
-var debug = require('debug')('ecopal:server')
+const debug = require('debug')('ecopal:server')
+import { alldrivers, editDriver } from '../models/drivers'
+import { allOrderZipCodes } from '../models/orders'
 import { addAdmin, logInAdmin, editAdmin } from '../models/admin'
 import bcrypt from 'bcrypt'
+import { UserData } from '../models/users'
 
 export async function createAdmin(req: Request, res: Response) {
   let user: AdminReg = {
@@ -42,9 +45,7 @@ export async function createAdmin(req: Request, res: Response) {
 
     // Redirect the user to the User dashboard route
     res.cookie('authorization', `${token}`)
-    // return res.status(200).redirect('/users/getorders'); ---work with this when available!
     res.redirect('/admin/alldrivers');
-    // return res.status(200).render('index', { page: 'home', value: 'Successful signup admin' });
   }
 
   if(adminData.error) {
@@ -95,15 +96,64 @@ export const zipCodeDays: {[k: string]: number} = {
 export async function update (req: Request, res: Response){
   if(!req.body){
       const message = 'No data provided'
-      return res.status(400).render('error', {error: message});
+      res.cookie('msg',`${ message }`);
+      return res.redirect('/admin/alldrivers');
   }
-  const result = await editAdmin(req.params.id, req.body);
- if(result.error){
-     return res.status(404).render('error', {error: result.error});
- }
- console.log("Bug"+req.body);
- console.log("Bug2"+result.value);
- return res.status(200).render('index',{page: 'login', message: result.value});
-//    res.status(200).redirect('/users/getallorders'); --use when page is ready.
+  const { currentPassword, ...user } = req.body;
+  //validate input;
+  const { value, error } = await validateAdminRegInput(user)
+  if (error) {
+    const err: string = error.details[0].message
+    res.cookie('msg',`${ err }`);
+    return res.redirect('/admin/alldrivers');
+  }
 
+const result = await editAdmin(req.params.id, req.body);
+ if(result.error){
+     res.cookie('msg',`${ result.error }`);
+     return res.redirect('/admin/alldrivers');
+ }
+
+ const token = getUserAuthToken(JSON.parse(JSON.stringify(result.value)));
+ res.cookie('authorization', `${token}`);
+ res.cookie('msg','Successfully updated');
+ res.redirect('/admin/alldrivers');
+}
+
+export async function getDrivers(req: Request, res: Response) {
+    
+  const confirmUser = await UserData.find({}).exec();
+  debug('All users: ', confirmUser)
+  // Get all drivers for sorting between Approved, Suspended, Pending
+  const driversObj = await alldrivers()
+  // Get all zipcodes of reistered orders
+  const zips = await allOrderZipCodes();
+
+  // res.locals.user holds objet of admin's details. Have to strigify and parse to retrieve the data from bson
+  return res.status(200).render('adminDashboard', { 
+      page: 'drivers', 
+      message: res.locals.message || 
+              `Successful logged in
+               ${res.locals.user.companyName}`, 
+      user: res.locals.user,
+      zips,
+      drivers: driversObj
+  });
+}
+
+export async function changeDriverInfo(req: Request, res: Response) {
+  const { status, zipcode } = req.body;
+  if (!status && !zipcode) {
+    res.cookie('msg', 'Cannot update without zipcode')
+    return res.redirect('/admin/alldrivers')
+  } else if (status && !zipcode) {
+    delete req.body.zipcode;
+  }
+  const result  = await editDriver(req.params.id, req.body);
+  if(result.error){
+    res.cookie('msg', `${result.error}`)
+    return res.redirect('/admin/alldrivers')
+  }
+  res.cookie('msg', 'Driver updated');
+  return res.redirect('/admin/alldrivers')
 }

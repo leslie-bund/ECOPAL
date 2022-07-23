@@ -1,4 +1,4 @@
-import { string } from "joi";
+import { boolean, string } from "joi";
 import mongoose from "mongoose";
 import { hashPassword } from "../utils/utils";
 var debug = require('debug')('ecopal:server');
@@ -12,8 +12,8 @@ const orderSchema = new mongoose.Schema({
     addressOfBin: String,
     zipCode: String,
     trips: [{
-        driverConfirm: Boolean,
-        userConfirm: Boolean,
+        driverConfirm: { type: Boolean, default: false },
+        userConfirm:  { type: Boolean, default: false },
         date: Date
     }]
 })
@@ -24,26 +24,22 @@ export async function addOrder(order: order) {
     try {
         const newOrder = new OrderData(order);
         const value = await newOrder.save();
-        debug('Order: ', value);
         return { value: value, error: null }
     } catch (err) {
         return { value: null, error: err }
     }
 }
 
-//Post user
+export async function postPone(id: string, obj: { index: number, newDate: string }) {
+    // For rescheduling
+    return OrderData.updateOne({ _id: id}, {
+      $set : { [`trips.${obj.index}.date`] : new Date(obj.newDate) }
+    })
+    
+}
 
-//login
-// export async function logInUser(user: Login) {
-//   //check database for user details
-//   try {
-//     const confirmUser = await UserData.findOne({ emailAddress: user.emailAddress }).exec();
-//     if (confirmUser){
-//       return { value: JSON.parse(JSON.stringify(confirmUser)), error: null };
-//     }
-//     return { error: true }
-//   } catch (err) {
-//     const dataObj = { value: null, error: err };
-//     return dataObj
-//   }
-// }
+export async function allOrderZipCodes() {
+    const zipArr = await OrderData.distinct('zipCode');
+    return zipArr;
+}
+

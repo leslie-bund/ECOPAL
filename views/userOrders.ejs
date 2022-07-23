@@ -1,0 +1,18 @@
+<div id="orders">
+    <div class="switcher login-switch">
+        <button data-toggle="future">
+            Active
+        </button>
+        <button data-toggle="confirm">
+            Pending
+        </button>
+        <button data-toggle="history">
+            Completed
+        </button>
+    </div>
+    <div class="switcher-display login-disp">
+        <%- include('partials/userOrder/future.ejs') %> 
+        <%- include('partials/userOrder/confirm.ejs') %>  
+        <%- include('partials/userOrder/history.ejs') %>  
+    </div>
+</div>

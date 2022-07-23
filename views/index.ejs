@@ -21,9 +21,7 @@
     <script>
         const pageElements = document.querySelectorAll('main > div');
         const main = document.querySelector('main');
-        // console.log('List of page elements')
         pageElements.forEach((node, index) => {
-          // console.log(`Element ${index}`,node.id)
           if (node.id !== '<%= page %>') {
             node.style.display = 'none'
           }

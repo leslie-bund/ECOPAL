@@ -1,11 +1,12 @@
 interface user {
-    firstname?: string | undefined;
-    lastname?: string | undefined;
-    emailAddress?: string | undefined;
-    phone?: string | undefined;
-    address?: string | undefined;
-    zipcode?: string | undefined;
-    password?: string | undefined;
+    status?: string;
+    firstname?: string;
+    lastname?: string;
+    emailAddress?: string;
+    phone?: string;
+    address?: string;
+    zipcode?: string;
+    password?: string ;
 }
 
 interface UserReg {
@@ -18,6 +19,7 @@ interface UserReg {
     password: string
     confirmPassword: string
 }
+
 
 interface DriverReg{
     firstname: string
@@ -35,6 +37,7 @@ interface AdminReg{
     companyName: string
     emailAddress: string
     password: string
+    currentPassword?: string
     confirmPassword: string
 }
 
@@ -62,6 +65,7 @@ interface driverPayload{
     phone: string;
     address: string;
     zipcode: string;
+    status: string;
     licenseNumber: string;
     password: string;
     role: string;
@@ -84,6 +88,7 @@ interface Login {
   }
 
 interface order {
+    _id?: string;
     user: {
         fullName: string,
         email: string
@@ -98,14 +103,40 @@ interface order {
 }
 
 interface orderInput {
-    fullname: string,
-    binAddress: string,
-    city: string,
-    zipCode: string,
-    state: string,
-    cardNum: string,
-    expMonth: string,
-    expYear: string,
-    cvc: string,
-    price: string
+    fullname: string;
+    binAddress: string;
+    city: string;
+    zipCode: string;
+    state: string;
+    cardNum: string;
+    expMonth: string;
+    expYear: string;
+    cvc: string;
+    price: string;
+}
+
+interface trip {
+    id?: string;
+    _index?: number;
+    driverConfirm: Boolean;
+    userConfirm: Boolean;
+    date: Date;
+}
+
+interface orderCollection {
+    history: trip[];
+    confirm: trip[];
+    future: trip[];
+  }
+
+interface driverOrder{
+  orderId: string,
+  address: string,
+  trip: {
+    driverConfirm: boolean,
+    userConfirm: boolean,
+    date: string,
+    _id: string
+  },
+  tripIndex: number
 }

@@ -1,0 +1,31 @@
+<div id="history">
+    <% if (drivers.suspended.length > 0) { %>
+        <% drivers.suspended.forEach((element, i) => { %>
+            <div style="background-color: whitesmoke; border-radius: 15px; padding: 2rem 1rem; margin-bottom: 1rem;">
+                <div class="flex" style="justify-content: space-between;">
+                    <p style="color: teal;">
+                        <span><%= element.firstname + " " + element.lastname %></span><br>
+                        <small><i><%= element.emailAddress %> </i></small><br>
+                        <small><i><%= element.phone %> </i></small><br>
+                        <small><i><%= element.licenseNumber %> </i></small><br>
+                        <small><i><%= element.address %> </i></small><br>
+                        <small>Current Status: 
+                            <i style="color: red; font-weight: 600;"><%= element.status %></i> 
+                        </small>
+                    </p>
+                    <form class="flex" action="/admin/updateDriver/<%= element._id %>?_method=PUT" method="post">
+                        <input type="checkbox" name="status" id="appr-sus-<%= i %>" value="approved">
+                        <label class="check-label" for="appr-sus-<%= i %>">
+                            Approve driver
+                        </label>
+                        <input type="submit" class="switch-1" value="Update">
+                    </form>
+                </div>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <h1 style="color: gray; text-align:center">
+            No suspended drivers
+        </h1>
+    <% } %> 
+</div>
