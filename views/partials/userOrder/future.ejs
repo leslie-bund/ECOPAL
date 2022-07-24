@@ -1,6 +1,6 @@
 <div id="future">
     <% if (orders.future.length > 0) { %>
-        <% orders.future.forEach(element => { %>
+        <% orders.future.sort((a, b) => { return new Date(a) - new Date(b)}).forEach(element => { %>
             <% if (new Date(element.date) < new Date()) { %>
                 <div style="background-color: rgba(210, 102, 102, 0.713); border-radius: 15px; padding: 2rem 1rem; margin-bottom: 1rem;">
                     <div class="flex" style="justify-content: space-between;">

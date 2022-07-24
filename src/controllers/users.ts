@@ -68,10 +68,7 @@ export async function logIn(req: Request, res: Response) {
     const { error } = await validateLoginInput(user)
     if (!error) {
       const dataObj = await logInUser(user)
-      if (
-        !dataObj?.error &&
-        (await bcrypt.compare(user.password, dataObj?.value.password))
-      ) {
+      if (!dataObj?.error && (await bcrypt.compare(user.password, dataObj?.value.password))) {
         const token = getUserAuthToken(
           JSON.parse(JSON.stringify(dataObj.value)),
         )
@@ -79,8 +76,9 @@ export async function logIn(req: Request, res: Response) {
 
         // Redirect to user dashboard --when dashboard is ready
         res.redirect('/users/getorders')
+        return;
       } else {
-        res.status(400)
+        res.status(400);
         throw new Error('Invalid emailAddress or password')
       }
     }
