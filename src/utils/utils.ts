@@ -1,6 +1,6 @@
 import Joi, { number } from 'joi'
 import bcrypt from 'bcrypt'
-import dns from 'dns/promises';
+// import dns from 'dns/promises';
 import jwt from 'jsonwebtoken';
 import { Response, Request, NextFunction } from 'express';
 import { AdminData } from '../models/admin';
@@ -128,7 +128,7 @@ export const logout =( async function(req: Request, res: Response, next: NextFun
 export async function emailHasMxRecord(email: string): Promise<boolean> {
     try {
         const domain = email.split('@')[1];
-        const record = await dns.resolveMx(domain);
+        // const record = await dns.resolveMx(domain);
         return true;
     } catch (error) {
         return false;
