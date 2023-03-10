@@ -26,7 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.verifyAdmin = exports.verifyDriver = exports.verifyUser = exports.getUserAuthToken = exports.emailHasMxRecord = exports.logout = exports.validateLoginInput = exports.hashPassword = exports.validateAdminRegInput = exports.validateDriverRegInput = exports.validateRescheduleDate = exports.validateUserPayInput = exports.validateUserRegInput = void 0;
 const joi_1 = __importDefault(require("joi"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const promises_1 = __importDefault(require("dns/promises"));
+// import dns from 'dns/promises';
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const admin_1 = require("../models/admin");
 const drivers_1 = require("../models/drivers");
@@ -161,7 +161,7 @@ function emailHasMxRecord(email) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const domain = email.split('@')[1];
-            const record = yield promises_1.default.resolveMx(domain);
+            // const record = await dns.resolveMx(domain);
             return true;
         }
         catch (error) {
